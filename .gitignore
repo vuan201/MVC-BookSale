@@ -1,0 +1,54 @@
+# Thư mục build
+
+bin/
+obj/
+# Thư mục Visual Studio
+.vs/
+*.user
+*.suo
+*.csproj.user
+
+# Cấu hình ứng dụng (chứa thông tin nhạy cảm)
+appsettings.json
+appsettings.Development.json
+secrets.json
+
+# Thư mục log (nếu có)
+logs/
+
+# 🚀 Bỏ qua thư mục build và node_modules
+node_modules/
+dist/
+build/
+
+# ⚙️ Bỏ qua các file môi trường
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# 📌 Bỏ qua các file lock của package manager
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# 🔧 Bỏ qua các file cache, log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ⚛️ Bỏ qua cache của React
+.cache/
+.vite/
+.vitepress/cache/
+
+# 🏗 Bỏ qua file của TypeScript
+*.tsbuildinfo
+
+# 💻 Bỏ qua file IDE & hệ điều hành
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
