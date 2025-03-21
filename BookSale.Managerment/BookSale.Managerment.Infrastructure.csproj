@@ -7,4 +7,8 @@
     <RootNamespace>BookSale.Managerment_</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\BookSale.Managerment.DataAccess\BookSale.Managerment.DataAccess.csproj" />
+  </ItemGroup>
+
 </Project>

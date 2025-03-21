@@ -1,7 +1,14 @@
+using BookSale.Managerment.DataAccess.Configuration;
+using BookSale.Managerment.DataAccess.DataAccess;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+// Register database context
+Configuration.RegisterDb(builder.Services, builder.Configuration);
 
 var app = builder.Build();
 
