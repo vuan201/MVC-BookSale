@@ -5,6 +5,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Identity;
 using BookSale.Managerment.Domain.Entity;
+using Microsoft.AspNetCore.Builder;
 namespace BookSale.Managerment.DataAccess.Configuration
 {
     public static class Configuration 
@@ -16,12 +17,12 @@ namespace BookSale.Managerment.DataAccess.Configuration
 
             var serverVersion = new MySqlServerVersion(new Version(8, 0, 23));
 
-            service.AddDbContext<BookSaleDbContext>(options =>
+            service.AddDbContext<ApplicationDbContext>(options =>
                 options.UseMySql(connectionString, serverVersion));
 
             service.AddIdentity<ApplicationUser, IdentityRole>(options =>
                 options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<BookSaleDbContext>();
+                .AddEntityFrameworkStores<ApplicationDbContext>();
         }
 
     }
