@@ -6,6 +6,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Identity;
 using BookSale.Managerment.Domain.Entity;
 using Microsoft.AspNetCore.Builder;
+using BookSale.Managerment.Domain.Abstract;
+using BookSale.Managerment.DataAccess.Repository;
 namespace BookSale.Managerment.DataAccess.Configuration
 {
     public static class Configuration 
@@ -24,6 +26,10 @@ namespace BookSale.Managerment.DataAccess.Configuration
                 options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
         }
-
+        public static void AddDependencyInjection(this IServiceCollection service)
+        {
+            service.AddScoped<PasswordHasher<ApplicationUser>>();
+            service.AddScoped<IGenreRepository, GenreRepository>();
+        }
     }
 }

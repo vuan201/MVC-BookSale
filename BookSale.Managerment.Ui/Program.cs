@@ -9,6 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Đăng ký db
 builder.Services.RegisterDb(builder.Configuration);
+builder.Services.AddDependencyInjection();
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
