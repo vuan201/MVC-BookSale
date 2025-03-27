@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using BookSale.Managerment.DataAccess.DataAccess;
+﻿using BookSale.Managerment.DataAccess.DataAccess;
 using BookSale.Managerment.Domain.Abstract;
 using BookSale.Managerment.Domain.Entity;
 namespace BookSale.Managerment.DataAccess.Repository
@@ -18,7 +13,5 @@ namespace BookSale.Managerment.DataAccess.Repository
         {
             return await base.GetAll();
         }
-    }
-    {
     }
 }

@@ -19,6 +19,4 @@ namespace BookSale.Managerment.DataAccess.Repository
             return await base.GetAll();
         }
     }
-    {
-    }
 }

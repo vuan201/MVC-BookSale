@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace BookSale.Managerment.DataAccess.Repository
 {
-    internal class GenreRepository : BaseRepository<Genres>, IGenreRepository
+    public class GenreRepository : BaseRepository<Genres>, IGenreRepository
     {
         public GenreRepository(ApplicationDbContext context) : base(context)
         {

@@ -29,7 +29,7 @@ namespace BookSale.Managerment.DataAccess.Configuration
         public static void AddDependencyInjection(this IServiceCollection service)
         {
             service.AddScoped<PasswordHasher<ApplicationUser>>();
-            service.AddScoped<IGenreRepository, GenreRepository>();
+            service.AddScoped<IUnitOfWork, UnitOFWork>();
         }
     }
 }

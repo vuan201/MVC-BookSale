@@ -1,6 +1,5 @@
 ﻿using BookSale.Managerment.DataAccess.Repository;
 using BookSale.Managerment.Domain.Entity;
-using BookSale.Managerment.
 
 using BookSale.Managerment.Domain.Abstract;
 
