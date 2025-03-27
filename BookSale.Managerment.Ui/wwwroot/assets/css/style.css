@@ -8989,9 +8989,6 @@ textarea.tt-query,
 textarea.tt-hint {
   height: auto; }
 
-.form-group {
-  margin-bottom: 1rem; }
-
 .form-text {
   display: block;
   margin-top: 0.25rem; }
@@ -9927,9 +9924,10 @@ input[type="button"].btn-block {
   background-color: transparent;
   border: 0; }
   .dropdown-item:hover, .dropdown-item:focus {
-    color: #16181b;
+    color: #fff;
     text-decoration: none;
-    background-color: #13151b; }
+    background-color: #13151b; 
+  }
   .dropdown-item.active, .dropdown-item:active {
     color: #fff;
     text-decoration: none;
@@ -9949,7 +9947,27 @@ input[type="button"].btn-block {
   font-size: 0.875rem;
   color: #ffffff;
   white-space: nowrap; }
-
+  .btn, .ajax-upload-dragdrop .ajax-file-upload{
+    display: inline-block;
+    padding: 6px 12px;
+    margin-bottom: 0;
+    font-size: 14px;
+    font-weight: normal;
+    line-height: 1.42857143;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-image: none;
+    border: 1px solid transparent;
+    border-radius: 4px;
+  }
 .dropdown-item-text {
   display: block;
   padding: 0.25rem 1.5rem;
@@ -16072,9 +16090,9 @@ code {
 
 /* Buttons */
 .btn, .fc button, .ajax-upload-dragdrop .ajax-file-upload, .swal2-modal .swal2-buttonswrapper .swal2-styled, .swal2-modal .swal2-buttonswrapper .swal2-styled.swal2-confirm, .swal2-modal .swal2-buttonswrapper .swal2-styled.swal2-cancel, .wizard > .actions a {
-  font-size: 0.9375rem;
+  /* font-size: 0.9375rem;
   line-height: 1;
-  font-weight: normal;
+  font-weight: normal; */
   /* Buttons with only icons */
   /* Buttons with icon and text */ }
   .btn i, .fc button i, .ajax-upload-dragdrop .ajax-file-upload i, .swal2-modal .swal2-buttonswrapper .swal2-styled i, .swal2-modal .swal2-buttonswrapper .swal2-styled.swal2-confirm i, .swal2-modal .swal2-buttonswrapper .swal2-styled.swal2-cancel i, .wizard > .actions a i {
@@ -16905,7 +16923,7 @@ code {
 
 /* Forms */
 .form-group {
-  margin-bottom: 1rem; }
+  margin-bottom: 2.5rem; }
 
 .input-group-append,
 .input-group-prepend {
@@ -16936,7 +16954,9 @@ code {
   .tt-query:focus,
   .tt-hint:focus {
     border: 1px solid rgba(71, 164, 71, 0.5);
-    background-color: #2A3038; }
+    background-color: #2A3038; 
+    color: #fff;
+  }
   .form-control.form-control-lg, .form-control-lg.asColorPicker-input, .dataTables_wrapper select.form-control-lg, .jsgrid .jsgrid-table .jsgrid-filter-row input.form-control-lg[type=text],
   .jsgrid .jsgrid-table .jsgrid-filter-row select.form-control-lg, .jsgrid .jsgrid-table .jsgrid-filter-row input.form-control-lg[type=number], .select2-container--default .form-control-lg.select2-selection--single, .select2-container--default .select2-selection--single .form-control-lg.select2-search__field, .form-control-lg.typeahead,
   .form-control-lg.tt-query,
@@ -17082,13 +17102,48 @@ select.tt-hint {
 .form-group.has-danger .tt-hint {
   border-color: #fc424a; }
 
+.form-select:focus {
+    box-shadow: rgba(13, 110, 253, 0.25) 0px 0px 0px 0.25rem;
+    border-color: rgb(134, 183, 254);
+    outline: 0px;
+}
 .form-group .file-upload-default {
   visibility: hidden;
   position: absolute; }
-
+.form-select-lg {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    padding-left: 1rem;
+    font-size: 1.25rem;
+    border-radius: 0.5rem;
+}
+.form-select {
+    --bs-form-select-bg-img: url(data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23f2f7f8' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e);
+    display: block;
+    width: 100%;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #fff;
+    appearance: none;
+    background-color: var(--bs-body-bg);
+    background-image: var(--bs-form-select-bg-img), var(--bs-form-select-bg-icon, none);
+    background-repeat: no-repeat;
+    background-size: 16px 12px;
+    padding: 0.375rem 2.25rem 0.375rem 0.75rem;
+    background-position: right 0.75rem center;
+    border: var(--bs-border-width) solid var(--bs-border-color);
+    border-radius: var(--bs-border-radius);
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+select {
+    background-color: rgb(42, 48, 56) !important;
+}
 .form-group .file-upload-info {
   background: transparent; }
-
+  .form-select {
+    color: rgb(75, 85, 100) !important;
+  }
 .form-check {
   min-height: 18px;
   padding-left: 1.25rem; }
@@ -17882,7 +17937,8 @@ div.tagsinput {
 /* Tables */
 .table, .jsgrid .jsgrid-table {
   margin-bottom: 0;
-  color: #6c7293; }
+  /* color: #6c7293;  */
+}
   .table thead th, .jsgrid .jsgrid-table thead th {
     border-top: 0;
     border-bottom-width: 1px;
