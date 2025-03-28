@@ -24,25 +24,26 @@
                             <h3 class="card-title text-left mb-3">Login</h3>
                             <form method="post" action="Login" asp-antiforgery="true">
                                 <div class="form-group">
-                                    <label for="UserName" >Username</label>
+                                    <label for="UserName" >Tên đăng nhập</label>
                                     <input id="UserName" type="text" class="form-control p_input" asp-for="Username">
                                     <span class="text-danger" asp-validation-for="Username"></span>
                                 </div>
                                 <div class="form-group">
-                                    <label for="Password">Password</label>
+                                    <label for="Password">Mật khẩu</label>
                                     <input id="Password" type="password" class="form-control p_input" asp-for="Password">
                                     <span class="text-danger" asp-validation-for="Password"></span>
                                 </div>
+                                <span class="text-danger">@Html.Raw(ViewBag.Error)</span>
                                 <div class="form-group d-flex align-items-center justify-content-between">
                                     <div class="form-check">
                                         <label class="form-check-label">
-                                            <input type="checkbox" class="form-check-input" asp-for="RememberMe"> Remember me
+                                            <input type="checkbox" class="form-check-input" asp-for="RememberMe">Lưu mật khẩu
                                         </label>
                                     </div>
-                                    <a href="#" class="forgot-pass">Forgot password</a>
+                                    <a href="#" class="forgot-pass">Quên mật khẩu?</a>
                                 </div>
                                 <div class="text-center">
-                                    <button type="submit" class="btn btn-primary btn-block enter-btn">Login</button>
+                                    <button type="submit" class="btn btn-primary btn-block enter-btn">Đăng nhập</button>
                                 </div>
                                 <div class="d-flex">
                                     <button class="btn btn-facebook mr-2 col">
@@ -52,7 +53,7 @@
                                         <i class="mdi mdi-google-plus"></i> Google plus
                                     </button>
                                 </div>
-                                <p class="sign-up">Don't have an Account?<a href="#"> Sign Up</a></p>
+                                <p class="sign-up">Chưa có tài khoản? <a href="#">Đăng ký ngay!</a></p>
                             </form>
                         </div>
                     </div>

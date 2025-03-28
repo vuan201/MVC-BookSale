@@ -57,6 +57,7 @@ namespace BookSale.Managerment.DataAccess
                     {
                         await roleManager.CreateAsync(new IdentityRole(baseRole));
                     }
+
                     // Kiểm tra xem người dùng có tồn tại hay không, nếu không thì tạo mới
                     var existUser = await userManager.FindByNameAsync(userName);
                     if (existUser == null)
@@ -68,10 +69,12 @@ namespace BookSale.Managerment.DataAccess
                             FullName = fullName,
                             Email = email,
                             NormalizedEmail = email,
-                            Address = "",
+                            Address = "Việt Nam",
                             IsActive = true,
                             AccessFailedCount = 0,
+                            PhoneNumber = "0989771234",
                         };
+
                         // thiết lập user mạc định
                         var identityUser = await userManager.CreateAsync(baseUser, password);
 
@@ -80,6 +83,10 @@ namespace BookSale.Managerment.DataAccess
                             // Thêm role cho người dùng mặc định
                             await userManager.AddToRoleAsync(baseUser, baseRole);
                         }
+
+                        // Xác nhận email của người dùng mặc định
+                        var token = await userManager.GenerateEmailConfirmationTokenAsync(baseUser);
+                        await userManager.ConfirmEmailAsync(baseUser, token);
                     }
                 }
                 catch (Exception ex)

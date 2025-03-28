@@ -33,7 +33,7 @@ if (app.Environment.IsDevelopment())
 else
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+    // Giá trị HSTS mặc định là 30 ngày.Bạn có thể muốn thay đổi điều này cho các kịch bản sản xuất, xem thêm tại https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
@@ -42,7 +42,7 @@ app.UseStaticFiles(new StaticFileOptions()
 {
     OnPrepareResponse = ctx =>
     {
-        // Requires the following import:
+        // Yêu cầu nhập thư viện sau:
         // using Microsoft.AspNetCore.Http;
         ctx.Context.Response.Headers.Append("Cache-Control", "public,max-age=600");
     }

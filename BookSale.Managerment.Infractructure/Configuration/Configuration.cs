@@ -8,6 +8,7 @@ using BookSale.Managerment.Domain.Entity;
 using Microsoft.AspNetCore.Builder;
 using BookSale.Managerment.Domain.Abstract;
 using BookSale.Managerment.DataAccess.Repository;
+using BookSale.Managerment.Application.Service;
 namespace BookSale.Managerment.DataAccess.Configuration
 {
     public static class Configuration 
@@ -25,11 +26,33 @@ namespace BookSale.Managerment.DataAccess.Configuration
             service.AddIdentity<ApplicationUser, IdentityRole>(options =>
                 options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+
+            service.AddIdentity<ApplicationUser, IdentityRole>(options =>
+            {
+                // Không yêu cầu xác thực email
+                options.SignIn.RequireConfirmedEmail = false;
+
+                // Không yêu cầu xác thực số điện thoại
+                options.SignIn.RequireConfirmedPhoneNumber = false;
+
+                // Không yêu cầu xác thực tài khoản
+                options.SignIn.RequireConfirmedAccount = false;
+
+                // Cấu hình chính sách mật khẩu (tùy chọn)
+                options.Password.RequireDigit = true; // Yêu cầu có số
+                options.Password.RequireLowercase = true; // Yêu cầu có chữ thường
+                options.Password.RequireUppercase = true; // Yêu cầu có chữ hoa
+                options.Password.RequireNonAlphanumeric = true; // Yêu cầu có ký tự đặc biệt
+                options.Password.RequiredLength = 6; // Độ dài tối thiểu
+            })
+            .AddEntityFrameworkStores<ApplicationDbContext>()
+            .AddDefaultTokenProviders();
         }
         public static void AddDependencyInjection(this IServiceCollection service)
         {
             service.AddScoped<PasswordHasher<ApplicationUser>>();
             service.AddScoped<IUnitOfWork, UnitOFWork>();
+            service.AddScoped<IUserService, UserService>();
         }
     }
 }

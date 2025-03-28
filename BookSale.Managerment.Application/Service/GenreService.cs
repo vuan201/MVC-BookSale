@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BookSale.Managerment.Application
+namespace BookSale.Managerment.Application.Service
 {
     public class GenreService : IGenreService
     {
