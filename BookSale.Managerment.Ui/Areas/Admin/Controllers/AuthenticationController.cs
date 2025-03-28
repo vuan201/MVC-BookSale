@@ -1,6 +1,7 @@
 ﻿using BookSale.Managerment.Application.Service;
 using BookSale.Managerment.Domain.Abstract;
 using BookSale.Managerment.Ui.Areas.Admin.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
@@ -62,6 +63,12 @@ namespace BookSale.Managerment.Ui.Areas.Admin.Controllers
             }
 
             return View();
+        }
+        public async Task<IActionResult> Logout()
+        {
+            await _userService.Logout();
+
+            return Redirect(nameof(Login));
         }
     }
 }

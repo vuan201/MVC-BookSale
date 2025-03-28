@@ -23,8 +23,7 @@ namespace BookSale.Managerment.DataAccess.Configuration
             service.AddDbContext<ApplicationDbContext>(options =>
                 options.UseMySql(connectionString, serverVersion));
 
-            // service.AddIdentity<ApplicationUser, IdentityRole>(options =>
-            //     options.SignIn.RequireConfirmedAccount = true)
+            // service.AddIdentity<ApplicationUser, IdentityRole>()
             //     .AddEntityFrameworkStores<ApplicationDbContext>();
 
             service.AddIdentity<ApplicationUser, IdentityRole>(options =>
@@ -47,6 +46,15 @@ namespace BookSale.Managerment.DataAccess.Configuration
             })
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddDefaultTokenProviders();
+
+            service.ConfigureApplicationCookie(options => 
+            {
+                options.Cookie.Name = "BookSaleManagermentCookie";
+                options.ExpireTimeSpan = TimeSpan.FromDays(30); // Thời gian hết hạn cookie là 30 ngày
+                options.SlidingExpiration = true; // Cho phép kéo dài thời gian sống của cookie khi người dùng tiếp tục truy cập
+                options.LoginPath = "/Admin/Authentication/Login"; // Đường dẫn đến trang đăng nhập
+                // options.AccessDeniedPath = "/"; // Đường dẫn đến trang không được phép truy cập
+            });
         }
         public static void AddDependencyInjection(this IServiceCollection service)
         {

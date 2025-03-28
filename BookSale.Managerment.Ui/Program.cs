@@ -1,8 +1,4 @@
-﻿using BookSale.Managerment.Ui;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using BookSale.Managerment.DataAccess.DataAccess;
-using BookSale.Managerment.DataAccess.Configuration;
+﻿using BookSale.Managerment.DataAccess.Configuration;
 using BookSale.Managerment.DataAccess;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -50,11 +46,12 @@ app.UseStaticFiles(new StaticFileOptions()
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
-    name: "default",
-    pattern: "{area}/{controller=Home}/{action=Index}/{id?}");
+    name: "areas",
+    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 
 app.MapControllerRoute(
     name: "default",

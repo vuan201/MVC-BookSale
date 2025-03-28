@@ -77,5 +77,9 @@ namespace BookSale.Managerment.Application.Service
                 return (false, "Đăng nhập thất bại: " + (result.ToString() ?? "Lỗi không xác định"));
             }
         }
+        public async Task Logout()
+        {
+            await _signInManager.SignOutAsync();
+        }
     }
 }
