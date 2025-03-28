@@ -23,9 +23,9 @@ namespace BookSale.Managerment.DataAccess.Configuration
             service.AddDbContext<ApplicationDbContext>(options =>
                 options.UseMySql(connectionString, serverVersion));
 
-            service.AddIdentity<ApplicationUser, IdentityRole>(options =>
-                options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+            // service.AddIdentity<ApplicationUser, IdentityRole>(options =>
+            //     options.SignIn.RequireConfirmedAccount = true)
+            //     .AddEntityFrameworkStores<ApplicationDbContext>();
 
             service.AddIdentity<ApplicationUser, IdentityRole>(options =>
             {
