@@ -39,16 +39,15 @@ namespace BookSale.Managerment.Ui.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 // Gọi đến service để check login
-                var (success, message) = await _userService.CheckLogin(loginForm.Username, loginForm.Password);
+                var Response = await _userService.CheckLogin(loginForm.Username, loginForm.Password, loginForm.RememberMe);
 
-                if (!success)
+                if (!Response.Status)
                 {
-                    ViewBag.Error = message;
+                    ViewBag.Error = Response.Message;
                     return View();
                 }
                 else
                 {
-                    // HttpContext.Session.SetString("Username", loginForm.Username);
                     return RedirectToAction("Index", "Home");
                 }
             }
