@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace BookSale.Managerment.Application.DTOs
 {
-    internal class BookImageDTO
+    public class BookImageDTO
     {
         public int Id { get; set; }
         public int BookId { get; set; }

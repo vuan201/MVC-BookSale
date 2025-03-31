@@ -9,11 +9,19 @@ builder.Services.AddDependencyInjection();
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-// Đăng ký Razor Pages
-builder.Services.AddRazorPages();
+// Đăng ký Razor Pages, thêm Session State Temp Data Provider để lưu trữ dữ liệu tạm thời trong phiên làm việc.
+builder.Services.AddRazorPages()
+                .AddSessionStateTempDataProvider();
+
 builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
 
 builder.Services.AddControllersWithViews();
+
+// Đăng ký session state.
+builder.Services.AddSession(options => {
+    // Thiết lập thời gian chờ tối đa của một phiên làm việc.
+    options.IdleTimeout = TimeSpan.FromSeconds(60);
+});
 
 var app = builder.Build();
 
@@ -57,5 +65,8 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 app.MapRazorPages();
+
+// Sử dụng session.
+app.UseSession();
 
 app.Run();
