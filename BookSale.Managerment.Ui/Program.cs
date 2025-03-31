@@ -6,6 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Đăng ký db
 builder.Services.RegisterDb(builder.Configuration);
 builder.Services.AddDependencyInjection();
+builder.Services.AddAutoMapperConfiguration();
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
@@ -13,8 +14,10 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddRazorPages()
                 .AddSessionStateTempDataProvider();
 
+// Đăng ký dịch vụ Razor Runtime Compilation.
 builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
 
+// Đăng ký dịch vụ MVC.
 builder.Services.AddControllersWithViews();
 
 // Đăng ký session state.

@@ -12,8 +12,8 @@
             <span class="count bg-success"></span>
           </div>
           <div class="profile-name">
-            <h5 class="mb-0 font-weight-normal">Henry Klein</h5>
-            <span>Gold Member</span>
+            <h5 class="mb-0 font-weight-normal">@User.Identity?.Name</h5>
+            <span></span>
           </div>
         </div>
         <a href="#" id="profile-dropdown" data-toggle="dropdown"><i class="mdi mdi-dots-vertical"></i></a>
@@ -25,7 +25,7 @@
               </div>
             </div>
             <div class="preview-item-content">
-              <p class="preview-subject ellipsis mb-1 text-small">Account settings</p>
+              <p class="preview-subject ellipsis mb-1 text-small">Quản lý tài khoản</p>
             </div>
           </a>
           <div class="dropdown-divider"></div>
@@ -36,47 +36,35 @@
               </div>
             </div>
             <div class="preview-item-content">
-              <p class="preview-subject ellipsis mb-1 text-small">Change Password</p>
-            </div>
-          </a>
-          <div class="dropdown-divider"></div>
-          <a href="#" class="dropdown-item preview-item">
-            <div class="preview-thumbnail">
-              <div class="preview-icon bg-dark rounded-circle">
-                <i class="mdi mdi-calendar-today text-success"></i>
-              </div>
-            </div>
-            <div class="preview-item-content">
-              <p class="preview-subject ellipsis mb-1 text-small">To-do list</p>
+              <p class="preview-subject ellipsis mb-1 text-small">Đổi mật khẩu</p>
             </div>
           </a>
         </div>
       </div>
     </li>
     <li class="nav-item nav-category">
-      <span class="nav-link">Navigation</span>
+      <span class="nav-link">Menu</span>
     </li>
-    <li class="nav-item menu-items active">
+    <li class="nav-item menu-items">
       <a class="nav-link" href="index.html">
         <span class="menu-icon">
           <i class="mdi mdi-speedometer"></i>
         </span>
-        <span class="menu-title">Dashboard</span>
+        <span class="menu-title">Tổng quan</span>
       </a>
     </li>
     <li class="nav-item menu-items">
       <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
         <span class="menu-icon">
-          <i class="mdi mdi-laptop"></i>
+          <i class="mdi mdi-ticket-account"></i>
         </span>
-        <span class="menu-title">Basic UI Elements</span>
+        <span class="menu-title">Tài khoản</span>
         <i class="menu-arrow"></i>
       </a>
       <div class="collapse" id="ui-basic">
         <ul class="nav flex-column sub-menu">
-          <li class="nav-item"> <a class="nav-link" href="pages/ui-features/buttons.html">Buttons</a></li>
-          <li class="nav-item"> <a class="nav-link" href="pages/ui-features/dropdowns.html">Dropdowns</a></li>
-          <li class="nav-item"> <a class="nav-link" href="pages/ui-features/typography.html">Typography</a></li>
+          <li class="nav-item"> <a class="nav-link" asp-action="AccountManagerment" asp-controller="Account">Quản lý tài khoản</a></li>
+          <li class="nav-item"> <a class="nav-link" asp-action="RoleManagerment" asp-controller="Account">Quản lý quyền</a></li>
         </ul>
       </div>
     </li>

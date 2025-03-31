@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Builder;
 using BookSale.Managerment.Domain.Abstract;
 using BookSale.Managerment.DataAccess.Repository;
 using BookSale.Managerment.Application.Service;
+using BookSale.Managerment.Application.Mappings;
+using System.Reflection;
 namespace BookSale.Managerment.DataAccess.Configuration
 {
     public static class Configuration 
@@ -56,7 +58,7 @@ namespace BookSale.Managerment.DataAccess.Configuration
             service.ConfigureApplicationCookie(options => 
             {
                 options.SlidingExpiration = true; // Cho phép kéo dài thời gian sống của cookie khi người dùng tiếp tục truy cập
-                options.ExpireTimeSpan = TimeSpan.FromMinutes(1); // Thời gian hết hạn cookie là 30 ngày
+                options.ExpireTimeSpan = TimeSpan.FromDays(3); // Thời gian hết hạn cookie là 30 ngày
                 options.Cookie.Name = "BookSaleManagermentCookie";
                 options.LoginPath = "/Admin/Authentication/Login"; // Đường dẫn đến trang đăng nhập
                 options.SlidingExpiration = true; // Cho phép kéo dài thời gian sống của cookie khi người dùng tiếp tục truy cập
@@ -76,6 +78,15 @@ namespace BookSale.Managerment.DataAccess.Configuration
             service.AddScoped<PasswordHasher<ApplicationUser>>();
             service.AddScoped<IUnitOfWork, UnitOFWork>();
             service.AddScoped<IUserService, UserService>();
+
+            // Đăng ký AutoMapper
+            service.AddAutoMapper(typeof(MappingProfile));
+        }
+
+        // Đăng ký AutoMapper
+        public static void AddAutoMapperConfiguration(this IServiceCollection service)
+        {
+            service.AddAutoMapper(Assembly.GetAssembly(typeof(MappingProfile)));
         }
     }
 }

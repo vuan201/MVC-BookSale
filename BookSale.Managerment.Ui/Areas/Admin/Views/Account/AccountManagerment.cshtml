@@ -1,0 +1,44 @@
+﻿@using BookSale.Managerment.Ui.Areas.Admin.Controllers
+@{
+    ViewData["Title"] = "Quản lý tài khoảng";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+<div class="card">
+    <div class="card-body">
+        <h4 class="card-title">Striped Table</h4>
+        <div class="">
+            <table 
+                id="account-table" 
+                class="table table-striped table-hover" 
+                data-toggle="table"
+                data-toolbar=".toolbar"
+                data-url="@Url.Action(nameof(AccountController.GetListAccounts))"
+                data-unique-id="id" 
+                data-side-pagination="server" 
+                data-pagination="true" 
+                data-search="true"
+                data-search-on-enter-key="true" 
+                data-query-params="customParams">
+                <thead>
+                    <tr>
+                        <th> User </th>
+                        <th> First name </th>
+                        <th> Progress </th>
+                        <th> Amount </th>
+                        <th> Deadline </th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function customParams(params) {
+            
+            return params;
+        }
+    </script>
+
+}

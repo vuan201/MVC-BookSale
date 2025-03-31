@@ -1,4 +1,5 @@
-﻿using BookSale.Managerment.Application.DTOs;
+﻿using AutoMapper;
+using BookSale.Managerment.Application.DTOs;
 using BookSale.Managerment.Domain.Entity;
 using Microsoft.AspNetCore.Identity;
 using System;
@@ -13,12 +14,18 @@ namespace BookSale.Managerment.Application.Service
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
-        public UserService(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+        private readonly IMapper _mapper;
+
+        public UserService(
+            UserManager<ApplicationUser> userManager,
+            SignInManager<ApplicationUser> signInManager,
+            IMapper mapper)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _mapper = mapper;
         }
-
+        
         public async Task<ResponseModel> CheckLogin(string username, string password, bool rememberMe)
         {
             // Kiểm tra người dùng tồn tại
@@ -83,6 +90,16 @@ namespace BookSale.Managerment.Application.Service
         public async Task Logout()
         {
             await _signInManager.SignOutAsync();
+        }
+
+        public async Task<AccountDTO?> GetUserByUsername(string username)
+        {
+            var user = await _userManager.FindByNameAsync(username);
+            if (user == null)
+                return null;
+
+            // Sử dụng AutoMapper để chuyển đổi từ ApplicationUser sang AccountDTO
+            return _mapper.Map<AccountDTO>(user);
         }
     }
 }

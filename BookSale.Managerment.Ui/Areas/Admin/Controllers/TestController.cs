@@ -20,11 +20,11 @@ namespace BookSale.Managerment.Ui.Areas.Admin.Controllers
             ViewBag.Error = "Error";
             ViewBag.success = "Success";
             ViewData["Message"] = "Hello";
-            
+
             // Lưu trữ trong session, chỉ tồn tại 1 lần duy nhất
             TempData["Warning"] = "Warning";  // Có thể truyền qua nhiều controller khác nhau và nhiều request khác nhau
 
-            var login = new BookImageDTO();
+            var login = new ResponseModel(true, "Login Success");
             // Strongly type: Kiểu rõ ràng
             return View(login);
 

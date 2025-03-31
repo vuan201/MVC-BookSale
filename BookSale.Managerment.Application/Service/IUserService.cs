@@ -8,5 +8,6 @@ namespace BookSale.Managerment.Application.Service
         Task<ResponseModel> CheckLogin(string username, string password, bool rememberMex);
         Task Logout();
         // Task<bool> Register(string username, string password);
+        Task<AccountDTO?> GetUserByUsername(string username);
     }
 }

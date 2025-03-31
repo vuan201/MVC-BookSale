@@ -18,7 +18,7 @@ logs/
 
 # 🚀 Bỏ qua thư mục build và node_modules
 node_modules/
-dist/
+# dist/
 build/
 
 # ⚙️ Bỏ qua các file môi trường

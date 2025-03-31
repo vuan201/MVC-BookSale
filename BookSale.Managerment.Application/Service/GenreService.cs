@@ -1,4 +1,5 @@
-﻿using BookSale.Managerment.Application.DTOs;
+﻿using AutoMapper;
+using BookSale.Managerment.Application.DTOs;
 using BookSale.Managerment.Domain.Abstract;
 using BookSale.Managerment.Domain.Entity;
 using System;
@@ -12,14 +13,18 @@ namespace BookSale.Managerment.Application.Service
     public class GenreService : IGenreService
     {
         private readonly IGenreRepository _genreRepository;
-        public GenreService(IGenreRepository genreRepository)
+        private readonly IMapper _mapper;
+
+        public GenreService(IGenreRepository genreRepository, IMapper mapper)
         {
             _genreRepository = genreRepository;
+            _mapper = mapper;
         }
 
         public async Task<IEnumerable<GenreDTO>> GetAllGenres()
         {
-            return (await _genreRepository.GetAllGenres()).Select(i => new GenreDTO { Id = i.Id, Name = i.Name, Description = i.Description });
+            var genres = await _genreRepository.GetAllGenres();
+            return _mapper.Map<IEnumerable<GenreDTO>>(genres);
         }
     }
 }

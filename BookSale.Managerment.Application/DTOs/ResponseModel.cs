@@ -8,7 +8,7 @@ namespace BookSale.Managerment.Application.DTOs
         public string Message { get; set; }
         public object? Data { get; set; }
 
-        public ResponseModel(bool status, string message)   
+        public ResponseModel(bool status, string message)
         {
             this.Status = status;
             this.Message = message;

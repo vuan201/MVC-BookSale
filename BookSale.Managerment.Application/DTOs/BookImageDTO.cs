@@ -11,6 +11,13 @@ namespace BookSale.Managerment.Application.DTOs
 {
     public class BookImageDTO
     {
+        public BookImageDTO(int id, int bookId, string imageUrl)
+        {
+            Id = id;
+            BookId = bookId;
+            ImageUrl = imageUrl;
+        }
+
         public int Id { get; set; }
         public int BookId { get; set; }
         public string ImageUrl { get; set; }

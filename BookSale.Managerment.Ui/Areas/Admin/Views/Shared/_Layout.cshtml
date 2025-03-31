@@ -24,6 +24,8 @@
     <link rel="stylesheet" href="~/assets/css/style.css">
     <!-- End layout styles -->
     <link rel="shortcut icon" href="~/assets/images/favicon.png" />
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="~/lib/bootstrap-table-master/dist/bootstrap-table.min.css">
 </head>
 
 <body>
@@ -60,14 +62,53 @@
     <!-- inject:js -->
     <script src="~/assets/js/off-canvas.js"></script>
     <script src="~/assets/js/hoverable-collapse.js"></script>
-    <script src="~/assets/js/misc.js"></script>
+    @* <script src="~/assets/js/misc.js"></script> *@
     <script src="~/assets/js/settings.js"></script>
     <script src="~/assets/js/todolist.js"></script>
     <!-- endinject -->
     <!-- Custom js for this page -->
     <script src="~/assets/js/dashboard.js"></script>
     <!-- End custom js for this page -->
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="~/lib/bootstrap-table-master/dist/bootstrap-table.min.js"></script>
+    <!-- Latest compiled and minified Locales -->
+    <script src="~/lib/bootstrap-table-master/dist/locale/bootstrap-table-vi-VN.min.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
+    <script>
+        $(document).ready(function () {
+            var currentPath = window.location.pathname.toLowerCase(); // Lấy URL hiện tại
+
+            function addActiveClass(element) {
+                var href = element.attr('href').toLowerCase(); // Lấy đường dẫn của thẻ <a>
+
+                if (currentPath === "/" || currentPath === "/home/index") {
+                    // Nếu đang ở trang chủ
+                    if (href.includes("/home/index")) {
+                        element.parents('.nav-item').last().addClass('active');
+                    }
+                } else {
+                    // Nếu đang ở trang khác
+                    if (href === currentPath || currentPath.startsWith(href)) {
+                        element.parents('.nav-item').last().addClass('active');
+
+                        if (element.parents('.sub-menu').length) {
+                            element.closest('.collapse').addClass('show');
+                            element.addClass('active');
+                        }
+                        if (element.parents('.submenu-item').length) {
+                            element.addClass('active');
+                        }
+                    }
+                }
+            }
+
+            // Áp dụng cho tất cả các thẻ <a> trong menu
+            $(".nav-item a").each(function () {
+                addActiveClass($(this));
+            });
+        });
+    </script>
 </body>
 
 </html>
