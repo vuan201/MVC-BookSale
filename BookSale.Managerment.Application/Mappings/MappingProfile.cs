@@ -9,7 +9,8 @@ namespace BookSale.Managerment.Application.Mappings
         public MappingProfile()
         {
             // User mappings
-            CreateMap<ApplicationUser, AccountDTO>().ReverseMap();
+            CreateMap<ApplicationUser, UserDTO>().ReverseMap();
+            // CreateMap<List<ApplicationUser>, List<UserDTO>>().ReverseMap();
 
             // Genre mappings
             CreateMap<Genres, GenreDTO>().ReverseMap();

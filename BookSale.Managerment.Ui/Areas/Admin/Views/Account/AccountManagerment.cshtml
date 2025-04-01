@@ -21,11 +21,11 @@
                 data-query-params="customParams">
                 <thead>
                     <tr>
-                        <th> User </th>
-                        <th> First name </th>
-                        <th> Progress </th>
-                        <th> Amount </th>
-                        <th> Deadline </th>
+                        <th data-field="id"> Id </th>
+                        <th data-field="userName"> User Name </th>
+                        <th data-field="fullName"> FUll Name </th>
+                        <th data-field="email"> Email </th>
+                        <th data-field="phone"> Phone </th>
                     </tr>
                 </thead>
             </table>
@@ -36,7 +36,7 @@
 @section Scripts {
     <script>
         function customParams(params) {
-            
+            console.log(params)
             return params;
         }
     </script>

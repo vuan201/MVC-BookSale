@@ -92,14 +92,31 @@ namespace BookSale.Managerment.Application.Service
             await _signInManager.SignOutAsync();
         }
 
-        public async Task<AccountDTO?> GetUserByUsername(string username)
+        public async Task<UserDTO?> GetUserByUsername(string username)
         {
             var user = await _userManager.FindByNameAsync(username);
             if (user == null)
                 return null;
 
-            // Sử dụng AutoMapper để chuyển đổi từ ApplicationUser sang AccountDTO
-            return _mapper.Map<AccountDTO>(user);
+            // Sử dụng AutoMapper để chuyển đổi từ ApplicationUser sang UserDTO
+            return _mapper.Map<UserDTO>(user);
+        }
+        public ResponseModel<List<UserDTO>> GetAllUsers(RequestFilterModel filter)
+        {
+            var query = _userManager.Users.AsQueryable();
+
+            var total = query.Count();
+
+            if(!string.IsNullOrEmpty(filter.search))
+            {
+                query = query.Where(x => x.UserName.Contains(filter.search) 
+                                      || x.FullName.Contains(filter.search) 
+                                      || x.Email.Contains(filter.search));  
+            }
+
+            var users = query.Skip(filter.Offset).Take(filter.Limit).ToList();
+
+            return new ResponseModel<List<UserDTO>>(true, "Success", total, _mapper.Map<List<UserDTO>>(users));
         }
     }
 }
