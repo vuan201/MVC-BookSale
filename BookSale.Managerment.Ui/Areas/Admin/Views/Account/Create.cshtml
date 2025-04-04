@@ -1,0 +1,84 @@
+@model BookSale.Managerment.Application.DTOs.UserRequestModel
+
+<form class="forms-sample" asp-action="" asp-controller="" method="post" enctype="multipart/form-data">
+  <div class="row">
+    <div class="col-md-6 grid-margin stretch-card">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title">Tạo tài khoản mới</h4>
+          <div class="form-group">
+            <label for="UserName">Tên đăng nhập</label>
+            <input type="text" class="form-control" id="UserName" asp-for="UserName" placeholder="Tên đăng nhập">
+          </div>
+          <div class="form-group">
+            <label for="FullName">Họ và tên</label>
+            <input type="text" class="form-control" id="FullName" asp-for="FullName" placeholder="Họ và tên">
+          </div>
+          <div class="form-group">
+            <label for="Email">Địa chỉ email</label>
+            <input type="email" class="form-control" id="Email" asp-for="Email" placeholder="Địa chỉ email">
+          </div>
+          <div class="form-group">
+            <label for="PhoneNumber">Số điện thoại</label>
+            <input type="number" class="form-control" id="PhoneNumber" asp-for="PhoneNumber"
+              placeholder="Số điện thoại">
+          </div>
+          <div class="form-group">
+            <label for="exampleInputPassword1">Mật khẩu</label>
+            <input type="password" class="form-control" id="Password" asp-for="Password" placeholder="Mật khẩu">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 grid-margin stretch-card">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title">Ảnh đại diện</h4>
+          <div class="form-image">
+            <div class="no-image">
+              <img class="img-thumbnail " alt="no_image.jpg" src="~/image/no_image.jpg" />
+            </div>
+            <div class="input-file-image">
+              <div class=" input-group d-flex align-items-center">
+                @* <input type="file"accept="image/*" class="form-control file-upload-info" placeholder="Upload Image"> *@
+                <div class="file-upload-wrapper"></div>
+                <button class="custom-file-upload">Chọn Tệp</button>
+                <input type="file" id="file-input" />
+                <span id="file-name">Chưa có tệp nào được chọn</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-12 grid-margin stretch-card">
+    <div class="card">
+      <div class="card-body">
+        <div class="d-flex justify-content-end">
+          <button type="submit" class="btn btn-primary me-2">Lưu</button>
+          <a asp-action="AccountManagerment" asp-controller="Account" class="btn btn-dark">Quay lại</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+@section Scripts {
+  <script>
+    const fileInput = document.getElementById('file-input');
+    const customButton = document.querySelector('.custom-file-upload');
+    const fileNameSpan = document.getElementById('file-name');
+
+    customButton.addEventListener('click', () => {
+      fileInput.click();
+    });
+
+    fileInput.addEventListener('change', () => {
+      if (fileInput.files.length > 0) {
+        fileNameSpan.textContent = fileInput.files[0].name;
+      } else {
+        fileNameSpan.textContent = 'Chưa có tệp nào được chọn';
+      }
+    });
+  </script>
+}

@@ -1,11 +1,21 @@
 ﻿@using BookSale.Managerment.Ui.Areas.Admin.Controllers
+@using BookSale.Managerment.Ui.Areas.Admin.View.Components;
 @{
     ViewData["Title"] = "Quản lý tài khoảng";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
 <div class="card">
+    <div class="card-header">
+        <div class="d-flex justify-content-between align-items-center">
+            <div class="title">
+                <h4>Danh sách tài khoản</h4>
+            </div>
+            <div class="card-action">
+                @await Html.PartialAsync("../Components/_RedirectButton.cshtml", new _RedirectButtonModel("Thêm tài khoản", "Create", "Account"))
+            </div>
+        </div>
+    </div>
     <div class="card-body">
-        <h4 class="card-title">Striped Table</h4>
         <div class="">
             <table 
                 id="account-table" 
@@ -18,14 +28,15 @@
                 data-pagination="true" 
                 data-search="true"
                 data-search-on-enter-key="true" 
-                data-query-params="customParams">
+                data-query-params="customParams"
+                data-loading-template="customLoading">
                 <thead>
                     <tr>
-                        <th data-field="id"> Id </th>
-                        <th data-field="userName"> User Name </th>
-                        <th data-field="fullName"> FUll Name </th>
-                        <th data-field="email"> Email </th>
-                        <th data-field="phone"> Phone </th>
+                        <th data-field="id">Id</th>
+                        <th data-field="userName">Tên đăng nhập</th>
+                        <th data-field="fullName">Họ tên</th>
+                        <th data-field="email">Email </th>
+                        <th data-field="phone">Số điện thoại</th>
                     </tr>
                 </thead>
             </table>
@@ -36,9 +47,10 @@
 @section Scripts {
     <script>
         function customParams(params) {
-            console.log(params)
             return params;
         }
+        function customLoading(loadingMessage) {
+            return loader;
+        }
     </script>
-
 }

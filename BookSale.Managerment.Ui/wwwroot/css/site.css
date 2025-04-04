@@ -8,7 +8,11 @@ html {
   }
 }
 
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+.btn:focus,
+.btn:active:focus,
+.btn-link.nav-link:focus,
+.form-control:focus,
+.form-check-input:focus {
   box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
@@ -19,4 +23,388 @@ html {
 
 body {
   margin-bottom: 60px;
+}
+
+/* ghi đè css nut phân trang của bootstrap table */
+
+.pagination .page-item,
+.pagination .page-item.active {
+  margin-right: 5px;
+}
+
+.pagination .page-item .page-link,
+.pagination .page-item.active .page-link {
+  transition: all 0.2s;
+}
+
+.pagination .page-item.active .page-link {
+  background-color: #fc424a;
+  color: #fff;
+}
+
+.pagination .page-item .page-link {
+  background-color: #46232C;
+  color: #fc424a;
+  border: none;
+}
+
+.pagination .page-item .page-link:hover {
+  background-color: transparent;
+}
+
+.pagination .page-item.active .page-link:hover {
+  background-color: #FC5E65;
+  border: none;
+}
+
+.page-item.page-first-separator.disabled .page-link,
+.page-item.page-last-separator.disabled .page-link {
+  background-color: #46232C;
+  color: #fc424a;
+}
+
+.page-list .dropdown.dropup .btn-secondary {
+  background-color: transparent;
+  color: #fff;
+  border: none;
+}
+
+.page-list .dropdown.dropup .btn-secondary:hover {
+  color: #000;
+  background-color: #E4EAEC;
+}
+
+.page-list .dropdown.dropup.show .btn-secondary {
+  color: #000;
+  background-color: #E4EAEC;
+  border: none;
+}
+
+.dropdown-menu.show .dropdown-item:hover {
+  color: #fff;
+}
+
+.dropdown-menu.show .dropdown-item.active {
+  background-color: #0090E7;
+  color: #fff;
+}
+
+/* redirect button */
+.redirect-button {
+  --border-color: linear-gradient(-45deg, #ffae00, #7e03aa, #00fffb);
+  --border-width: 0.125em;
+  --curve-size: 0.5em;
+  --blur: 30px;
+  --bg: #080312;
+  --color: #afffff;
+  color: var(--color);
+  cursor: pointer;
+  /* use position: relative; so that BG is only for .redirect-button */
+  position: relative;
+  isolation: isolate;
+  display: inline-grid;
+  place-content: center;
+  padding: 0.5em 1em;
+  font-size: 17px;
+  border: 0;
+  /* text-transform: uppercase; */
+  box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.6);
+  clip-path: polygon(
+      /* Top-left */
+      0% var(--curve-size),
+      var(--curve-size) 0,
+      /* top-right */
+      100% 0,
+      100% calc(100% - var(--curve-size)),
+      /* bottom-right 1 */
+      calc(100% - var(--curve-size)) 100%,
+      /* bottom-right 2 */
+      0 100%);
+  transition: color 250ms;
+}
+
+.redirect-button::after,
+.redirect-button::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+.redirect-button::before {
+  background: var(--border-color);
+  background-size: 300% 300%;
+  animation: move-bg7234 5s ease infinite;
+  z-index: -2;
+}
+
+@keyframes move-bg7234 {
+  0% {
+    background-position: 31% 0%;
+  }
+
+  50% {
+    background-position: 70% 100%;
+  }
+
+  100% {
+    background-position: 31% 0%;
+  }
+}
+
+.redirect-button::after {
+  background: var(--bg);
+  z-index: -1;
+  clip-path: polygon(
+      /* Top-left */
+      var(--border-width) calc(var(--curve-size) + var(--border-width) * 0.5),
+      calc(var(--curve-size) + var(--border-width) * 0.5) var(--border-width),
+      /* top-right */
+      calc(100% - var(--border-width)) var(--border-width),
+      calc(100% - var(--border-width)) calc(100% - calc(var(--curve-size) + var(--border-width) * 0.5)),
+      /* bottom-right 1 */
+      calc(100% - calc(var(--curve-size) + var(--border-width) * 0.5)) calc(100% - var(--border-width)),
+      /* bottom-right 2 */
+      var(--border-width) calc(100% - var(--border-width)));
+  transition: clip-path 500ms;
+}
+
+.redirect-button:where(:hover, :focus)::after {
+  clip-path: polygon(
+      /* Top-left */
+      calc(100% - var(--border-width)) calc(100% - calc(var(--curve-size) + var(--border-width) * 0.5)),
+      calc(100% - var(--border-width)) var(--border-width),
+      /* top-right */
+      calc(100% - var(--border-width)) var(--border-width),
+      calc(100% - var(--border-width)) calc(100% - calc(var(--curve-size) + var(--border-width) * 0.5)),
+      /* bottom-right 1 */
+      calc(100% - calc(var(--curve-size) + var(--border-width) * 0.5)) calc(100% - var(--border-width)),
+      /* bottom-right 2 */
+      calc(100% - calc(var(--curve-size) + var(--border-width) * 0.5)) calc(100% - var(--border-width)));
+  transition: 200ms;
+}
+
+.redirect-button:where(:hover, :focus) {
+  color: #fff;
+}
+
+a.redirect-button:hover {
+  color: var(--color);
+  text-decoration: none;
+}
+
+/* ghi đè loading bootstrap table */
+.fixed-table-body .fixed-table-loading.table.table-bordered.table-hover.open {
+  background-color: #181B22;
+}
+
+/* Loader */
+.loader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  --color: hsl(0, 0%, 87%);
+  --animation: 2s ease-in-out infinite;
+}
+
+.loader .circle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: 20px;
+  height: 20px;
+  border: solid 2px var(--color);
+  border-radius: 50%;
+  margin: 0 10px;
+  background-color: transparent;
+  animation: circle-keys var(--animation);
+}
+
+.loader .circle .dot {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background-color: var(--color);
+  animation: dot-keys var(--animation);
+}
+
+.loader .circle .outline {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  animation: outline-keys var(--animation);
+}
+
+.circle:nth-child(2) {
+  animation-delay: 0.3s;
+}
+
+.circle:nth-child(3) {
+  animation-delay: 0.6s;
+}
+
+.circle:nth-child(4) {
+  animation-delay: 0.9s;
+}
+
+.circle:nth-child(5) {
+  animation-delay: 1.2s;
+}
+
+.circle:nth-child(2) .dot {
+  animation-delay: 0.3s;
+}
+
+.circle:nth-child(3) .dot {
+  animation-delay: 0.6s;
+}
+
+.circle:nth-child(4) .dot {
+  animation-delay: 0.9s;
+}
+
+.circle:nth-child(5) .dot {
+  animation-delay: 1.2s;
+}
+
+.circle:nth-child(1) .outline {
+  animation-delay: 0.9s;
+}
+
+.circle:nth-child(2) .outline {
+  animation-delay: 1.2s;
+}
+
+.circle:nth-child(3) .outline {
+  animation-delay: 1.5s;
+}
+
+.circle:nth-child(4) .outline {
+  animation-delay: 1.8s;
+}
+
+.circle:nth-child(5) .outline {
+  animation-delay: 2.1s;
+}
+
+@keyframes circle-keys {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  50% {
+    transform: scale(1.5);
+    opacity: 0.5;
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes dot-keys {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(0);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes outline-keys {
+  0% {
+    transform: scale(0);
+    outline: solid 20px var(--color);
+    outline-offset: 0;
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(1);
+    outline: solid 0 transparent;
+    outline-offset: 20px;
+    opacity: 0;
+  }
+}
+
+/* end loader */
+
+/* style no image */
+.form-image {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.form-image>* {
+  margin: 20px 0;
+}
+
+.no-image {
+  width: 200px;
+}
+
+.no-image>img {
+  width: 200px;
+  height: auto;
+  border-radius: 50%;
+  /* filter: blur(5px); */
+  opacity: 0.5;
+}
+
+/* Custom input type file */
+.file-upload-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.custom-file-upload {
+  background-color: #4a5568;
+  /* Màu xám đậm */
+  color: #f7fafc;
+  /* Màu trắng nhạt */
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  border: 1px solid #718096;
+  /* Viền màu xám đậm hơn */
+  font-size: 16px;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.custom-file-upload:hover {
+  background-color: #2d3748;
+  /* Màu xám đậm hơn khi di chuột qua */
+  border-color: #cbd5e0;
+  /* Viền màu xám nhạt hơn khi di chuột qua */
+}
+
+#file-input {
+  position: absolute;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  left: 0;
+  top: 0;
+}
+
+#file-name {
+  margin-left: 10px;
+  font-size: 14px;
+  color: #cbd5e0;
+  /* Màu xám nhạt */
 }

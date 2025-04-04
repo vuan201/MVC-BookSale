@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Bogus;
 using BookSale.Managerment.Application.DTOs;
 using BookSale.Managerment.Domain.Entity;
 using Microsoft.AspNetCore.Identity;
@@ -116,7 +117,24 @@ namespace BookSale.Managerment.Application.Service
 
             var users = query.Skip(filter.Offset).Take(filter.Limit).ToList();
 
-            return new ResponseModel<List<UserDTO>>(true, "Success", total, _mapper.Map<List<UserDTO>>(users));
+            var fakeUsers = FakeData(filter.Limit);
+
+            return new ResponseModel<List<UserDTO>>(true, "Success", filter.Limit * 10, fakeUsers);
+            // return new ResponseModel<List<UserDTO>>(true, "Success", total, _mapper.Map<List<UserDTO>>(users));
+        }
+        private List<UserDTO> FakeData(int count)
+        {
+            var ids = 0;
+            var fakeUsers = new Faker<UserDTO>()
+                .StrictMode(true)//OrderId is deterministic
+                .RuleFor(u => u.Id, f => f.Random.String(10))
+                .RuleFor(u => u.UserName, f => f.Name.FindName())
+                .RuleFor(u => u.FullName, f => f.Name.FindName())
+                .RuleFor(u => u.Email, (f, u) => f.Internet.Email(u.FullName))
+                .RuleFor(u => u.PhoneNumber, f => f.Random.String())
+                .RuleFor(u => u.IsAdmin, f => true);
+            
+            return fakeUsers.Generate(count);
         }
     }
 }
