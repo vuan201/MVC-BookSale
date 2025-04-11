@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using BookSale.Managerment.Application.Abstracts;
 using BookSale.Managerment.Application.DTOs;
 using BookSale.Managerment.Domain.Abstract;
 using BookSale.Managerment.Domain.Entity;

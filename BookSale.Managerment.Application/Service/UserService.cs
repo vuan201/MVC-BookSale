@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using Bogus;
+using BookSale.Managerment.Application.Abstracts;
 using BookSale.Managerment.Application.DTOs;
 using BookSale.Managerment.Domain.Entity;
+using BookSale.Managerment.Domain.Enums;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
@@ -14,85 +16,15 @@ namespace BookSale.Managerment.Application.Service
     public class UserService : IUserService
     {
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IMapper _mapper;
 
         public UserService(
             UserManager<ApplicationUser> userManager,
-            SignInManager<ApplicationUser> signInManager,
             IMapper mapper)
         {
             _userManager = userManager;
-            _signInManager = signInManager;
             _mapper = mapper;
         }
-        
-        public async Task<ResponseModel> CheckLogin(string username, string password, bool rememberMe)
-        {
-            // Kiểm tra người dùng tồn tại
-            var user = await _userManager.FindByNameAsync(username);
-            if (user is null)
-            {
-                return new ResponseModel(false, "Tài khoản không tồn tại");
-            }
-            // Kiểm tra email đã được xác thực chưa (nếu yêu cầu xác thực email)
-            if (await _userManager.IsEmailConfirmedAsync(user) == false && _userManager.Options.SignIn.RequireConfirmedEmail)
-            {
-                return new ResponseModel(false, "Email chưa được xác thực");
-            }
-
-            // Kiểm tra trạng thái IsActive của tài khoản
-            if (!user.IsActive)
-            {
-                return new ResponseModel(false, "Tài khoản đã bị vô hiệu hóa");
-            }
-
-            // Kiểm tra mật khẩu có khớp không
-            var result = await _signInManager.PasswordSignInAsync(user, password, isPersistent: rememberMe,lockoutOnFailure: true);
-            if(result.IsLockedOut)
-            {
-                // Nếu tài khoản bị khóa, trả về thông báo và thời gian còn lại để mở khóa
-                if( user.LockoutEnd != null)
-                {
-                    var remainingLockot = user.LockoutEnd.Value - DateTimeOffset.UtcNow;
-                    return new ResponseModel(false, $"Tài khoản đã bị khóa, vui lòng thử lại sau {Math.Round(remainingLockot.TotalSeconds)}");
-                }
-            }
-            if (result.Succeeded)
-            {
-                // Xóa AccessFailedCount khi đăng nhập thành công
-                if(user.AccessFailedCount > 0)
-                {
-                    await _userManager.ResetAccessFailedCountAsync(user);
-                }
-
-                return new ResponseModel(true, "Đăng nhập thành công");
-            }
-            // Kiểm tra trạng thái IsActive của tài khoản
-            else if (!user.IsActive)
-            {
-                return new ResponseModel(false, "Tài khoản đã bị vô hiệu hóa");
-            }
-            else if (result.IsLockedOut)
-            {
-                return new ResponseModel(false, "Tài khoản đã bị khóa");
-            }
-            else if (result.IsNotAllowed)
-            {
-                return new ResponseModel(false, "Tài khoản không được phép đăng nhập");
-            }
-            else
-            {
-                return new ResponseModel(false, "Tài khoản hoặc mật khẩu không chính xác");
-
-                // return new ResponseModel(false, "Đăng nhập thất bại: " + (result.ToString() ?? "Lỗi không xác định"));
-            }
-        }
-        public async Task Logout()
-        {
-            await _signInManager.SignOutAsync();
-        }
-
         public async Task<UserDTO?> GetUserByUsername(string username)
         {
             var user = await _userManager.FindByNameAsync(username);
@@ -102,38 +34,102 @@ namespace BookSale.Managerment.Application.Service
             // Sử dụng AutoMapper để chuyển đổi từ ApplicationUser sang UserDTO
             return _mapper.Map<UserDTO>(user);
         }
-        public ResponseModel<List<UserDTO>> GetAllUsers(RequestFilterModel filter)
+
+        public ResponseModel<List<UserDTO>> GetUsers(RequestFilterModel filter)
         {
             var query = _userManager.Users.AsQueryable();
 
             var total = query.Count();
 
-            if(!string.IsNullOrEmpty(filter.search))
+            if (!string.IsNullOrEmpty(filter.search))
             {
-                query = query.Where(x => x.UserName.Contains(filter.search) 
-                                      || x.FullName.Contains(filter.search) 
-                                      || x.Email.Contains(filter.search));  
+                query = query.Where(x => x.UserName.Contains(filter.search)
+                                      || x.FullName.Contains(filter.search)
+                                      || x.Email.Contains(filter.search));
             }
 
             var users = query.Skip(filter.Offset).Take(filter.Limit).ToList();
 
-            var fakeUsers = FakeData(filter.Limit);
+            // var fakeUsers = FakeUser(filter.Limit);
 
-            return new ResponseModel<List<UserDTO>>(true, "Success", filter.Limit * 10, fakeUsers);
-            // return new ResponseModel<List<UserDTO>>(true, "Success", total, _mapper.Map<List<UserDTO>>(users));
+            // return new ResponseModel<List<UserDTO>>(true, "Success", filter.Limit * 10, fakeUsers);
+            return new ResponseModel<List<UserDTO>>(true, "Success", total, _mapper.Map<List<UserDTO>>(users));
         }
-        private List<UserDTO> FakeData(int count)
+        public async Task<ResponseModel> Save(UserRequestModel model)
+        {
+            var actionType = string.IsNullOrEmpty(model.Id) ? ActionType.Insert : ActionType.Update;
+
+            // Tạo tài khoản mới
+            if (actionType == ActionType.Insert)
+            {
+                var result = await Create(model);
+                // Nếu có lỗi, lấy thông báo lỗi từ Result
+
+                if (result.Status)
+                {
+                    return new ResponseModel(actionType, true, result.Message);
+                }
+
+                return new ResponseModel(actionType, false, $"{actionType.ToString()} : {result.Message}");
+            }
+            else
+            {
+                var result = await Update(model);
+
+                if (result.Status)
+                {
+                    return new ResponseModel(actionType, true, result.Message);
+                }
+
+                return new ResponseModel(actionType, false, $"{actionType.ToString()} : {result.Message}");
+            }
+
+        }
+        public async Task<ResponseModel> Create(UserRequestModel model)
+        {
+            if (await _userManager.FindByNameAsync(model.UserName) != null)
+                return new ResponseModel(false, "Tên đăng nhập đã tồn tại");
+
+            var user = new ApplicationUser();
+
+            _mapper.Map(model, user);
+
+            user.IsActive = true;
+
+            var result = await _userManager.CreateAsync(user, model.Password);
+
+            if (result.Succeeded)
+            {
+                await _userManager.AddToRoleAsync(user, model.RoleName);
+
+                return new ResponseModel(true, "Tạo tài khoản thành công");
+            }
+            return new ResponseModel(false, string.Join("<br/>", result.Errors.Select(i => i.Description)));
+        }
+        public async Task<ResponseModel> Update(UserRequestModel model)
+        {
+            if (model.Id == null) return new ResponseModel(false, "Không tìm thấy id");
+
+            var user = _mapper.Map<ApplicationUser>(model);
+
+            var result = await _userManager.UpdateAsync(user);
+
+            if (result.Succeeded) return new ResponseModel(true, "Cập nhật tài khoản thành công");
+
+            return new ResponseModel(false, "Cập nhật tài khoản không thành công");
+        }
+        private List<UserDTO> FakeUser(int count)
         {
             var ids = 0;
             var fakeUsers = new Faker<UserDTO>()
                 .StrictMode(true)//OrderId is deterministic
-                .RuleFor(u => u.Id, f => f.Random.String(10))
+                .RuleFor(u => u.Id, f => f.Random.String2(10))
                 .RuleFor(u => u.UserName, f => f.Name.FindName())
                 .RuleFor(u => u.FullName, f => f.Name.FindName())
                 .RuleFor(u => u.Email, (f, u) => f.Internet.Email(u.FullName))
-                .RuleFor(u => u.PhoneNumber, f => f.Random.String())
+                .RuleFor(u => u.PhoneNumber, f => f.Phone.PhoneNumber())
                 .RuleFor(u => u.IsAdmin, f => true);
-            
+
             return fakeUsers.Generate(count);
         }
     }

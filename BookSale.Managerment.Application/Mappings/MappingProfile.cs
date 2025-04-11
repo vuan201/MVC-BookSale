@@ -10,6 +10,9 @@ namespace BookSale.Managerment.Application.Mappings
         {
             // User mappings
             CreateMap<ApplicationUser, UserDTO>().ReverseMap();
+            CreateMap<ApplicationUser, UserRequestModel>();
+            CreateMap<UserRequestModel, ApplicationUser>()
+                .ForMember(dest => dest.Id, opt => opt.Ignore()); // Không map Id
             // CreateMap<List<ApplicationUser>, List<UserDTO>>().ReverseMap();
 
             // Genre mappings

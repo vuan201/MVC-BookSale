@@ -1,5 +1,6 @@
-﻿using BookSale.Managerment.DataAccess.Configuration;
+﻿﻿using BookSale.Managerment.DataAccess.Configuration;
 using BookSale.Managerment.DataAccess;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,8 +18,13 @@ builder.Services.AddRazorPages()
 // Đăng ký dịch vụ Razor Runtime Compilation.
 builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
 
-// Đăng ký dịch vụ MVC.
-builder.Services.AddControllersWithViews();
+// Đăng ký dịch vụ MVC với localization.
+builder.Services.AddControllersWithViews()
+    .AddViewLocalization()
+    .AddDataAnnotationsLocalization();
+
+// Cấu hình Localization
+builder.Services.LocalizationConfiguration();
 
 // Đăng ký session state.
 builder.Services.AddSession(options => {
@@ -50,12 +56,18 @@ app.UseStaticFiles(new StaticFileOptions()
     OnPrepareResponse = ctx =>
     {
         // Yêu cầu nhập thư viện sau:
-        // using Microsoft.AspNetCore.Http;
         ctx.Context.Response.Headers.Append("Cache-Control", "public,max-age=600");
     }
 });
 
 app.UseRouting();
+
+// Sử dụng localization
+var localizationOptions = app.Services.GetService<IOptions<RequestLocalizationOptions>>();
+if (localizationOptions != null)
+{
+    app.UseRequestLocalization(localizationOptions.Value);
+}
 
 app.UseAuthentication();
 app.UseAuthorization();
@@ -72,4 +84,4 @@ app.MapRazorPages();
 // Sử dụng session.
 app.UseSession();
 
-app.Run();
+await app.RunAsync();

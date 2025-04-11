@@ -10,7 +10,7 @@ namespace BookSale.Managerment.Domain.Extension
       {
         foreach (var line in File.ReadAllLines(filePath))
         {
-          if (!string.IsNullOrWhiteSpace(line) && !line.StartsWith("#"))
+          if (!string.IsNullOrWhiteSpace(line) && !line.StartsWith('#'))
           {
             var parts = line.Split('=', 2);
             if (parts.Length == 2)

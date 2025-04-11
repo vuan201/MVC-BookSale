@@ -1,4 +1,4 @@
-﻿using BookSale.Managerment.Application.Service;
+﻿using BookSale.Managerment.Application.Abstracts;
 using BookSale.Managerment.Domain.Abstract;
 using BookSale.Managerment.Ui.Areas.Admin.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -10,10 +10,10 @@ namespace BookSale.Managerment.Ui.Areas.Admin.Controllers
     [Area("Admin")]
     public class AuthenticationController : Controller
     {
-        private readonly IUserService _userService;
-        public AuthenticationController(IUserService userService)
+        private readonly IAuthenticationService _authenticationService;
+        public AuthenticationController(IAuthenticationService authenticationService)
         {
-            _userService = userService;
+            _authenticationService = authenticationService;         
         }
 
         public IActionResult Index()
@@ -39,7 +39,7 @@ namespace BookSale.Managerment.Ui.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 // Gọi đến service để check login
-                var Response = await _userService.CheckLogin(loginForm.Username, loginForm.Password, loginForm.RememberMe);
+                var Response = await _authenticationService.CheckLogin(loginForm.Username, loginForm.Password, loginForm.RememberMe);
 
                 if (!Response.Status)
                 {
@@ -65,7 +65,7 @@ namespace BookSale.Managerment.Ui.Areas.Admin.Controllers
         }
         public async Task<IActionResult> Logout()
         {
-            await _userService.Logout();
+            await _authenticationService.Logout();
 
             return Redirect(nameof(Login));
         }

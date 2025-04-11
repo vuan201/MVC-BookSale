@@ -1,6 +1,6 @@
 ﻿using BookSale.Managerment.Application.DTOs;
 
-namespace BookSale.Managerment.Application.Service
+namespace BookSale.Managerment.Application.Abstracts
 {
     public interface IGenreService
     {

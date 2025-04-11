@@ -11,9 +11,10 @@ using BookSale.Managerment.DataAccess.Repository;
 using BookSale.Managerment.Application.Service;
 using BookSale.Managerment.Application.Mappings;
 using System.Reflection;
+using BookSale.Managerment.Application.Abstracts;
 namespace BookSale.Managerment.DataAccess.Configuration
 {
-    public static class Configuration 
+    public static class Configuration
     {
         // Đăng ký DbContext và cấu hình kết nối cơ sở dữ liệu
         public static void RegisterDb(this IServiceCollection service, IConfiguration confix)
@@ -28,9 +29,6 @@ namespace BookSale.Managerment.DataAccess.Configuration
             // Đăng ký DbContext và cấu hình kết nối cơ sở dữ liệu
             service.AddDbContext<ApplicationDbContext>(options =>
                 options.UseMySql(connectionString, serverVersion));
-
-            // service.AddIdentity<ApplicationUser, IdentityRole>()
-            //     .AddEntityFrameworkStores<ApplicationDbContext>();
 
             // Cấu hình dịch vụ Identity
             service.AddIdentity<ApplicationUser, IdentityRole>(options =>
@@ -55,7 +53,7 @@ namespace BookSale.Managerment.DataAccess.Configuration
             .AddDefaultTokenProviders();
 
             // Cấu hình các tùy chọn về cookie cho xác thực
-            service.ConfigureApplicationCookie(options => 
+            service.ConfigureApplicationCookie(options =>
             {
                 options.SlidingExpiration = true; // Cho phép kéo dài thời gian sống của cookie khi người dùng tiếp tục truy cập
                 options.ExpireTimeSpan = TimeSpan.FromDays(3); // Thời gian hết hạn cookie là 30 ngày
@@ -66,18 +64,30 @@ namespace BookSale.Managerment.DataAccess.Configuration
             });
 
             // Cấu hình các tùy chọn khác về xác thực và bảo mật
-            service.Configure<IdentityOptions>(options => {
+            service.Configure<IdentityOptions>(options =>
+            {
                 options.Lockout.AllowedForNewUsers = true; // Cho phép khóa tài khoản cho người dùng mới tạo
                 options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromSeconds(30); // Thời gian khóa mặc định là 30 giây
                 options.Lockout.MaxFailedAccessAttempts = 5; // Số lần thử sai tối đa trước khi khóa tài khoản
+            
+                // Các ký tự hợp lệ trong tên người dùng
+                options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
+
+                // Email phải duy nhất
+                options.User.RequireUniqueEmail = true;
             });
         }
         // Đăng ký các dịch vụ phụ thuộc vào ứng dụng
         public static void AddDependencyInjection(this IServiceCollection service)
         {
+            // Đăng ký các dịch vụ Identity
             service.AddScoped<PasswordHasher<ApplicationUser>>();
             service.AddScoped<IUnitOfWork, UnitOFWork>();
+
+            // Đăng ký các dịch vụ
+            service.AddScoped<IAuthenticationService, AuthenticationService>();
             service.AddScoped<IUserService, UserService>();
+            service.AddScoped<IRoleService, RoleService>();
 
             // Đăng ký AutoMapper
             service.AddAutoMapper(typeof(MappingProfile));
@@ -87,6 +97,22 @@ namespace BookSale.Managerment.DataAccess.Configuration
         public static void AddAutoMapperConfiguration(this IServiceCollection service)
         {
             service.AddAutoMapper(Assembly.GetAssembly(typeof(MappingProfile)));
+        }
+        // Cấu hình Localization
+        public static void LocalizationConfiguration(this IServiceCollection services)
+        {
+            var supportedCultures = new[] { "vi-VN" };
+
+            // Cấu hình localization
+            services.AddLocalization(options => options.ResourcesPath = "Resources");
+
+            // Cấu hình các culture được hỗ trợ
+            services.Configure<RequestLocalizationOptions>(options =>
+            {
+                options.SetDefaultCulture(supportedCultures[0])
+                    .AddSupportedCultures(supportedCultures)
+                    .AddSupportedUICultures(supportedCultures);
+            });
         }
     }
 }
