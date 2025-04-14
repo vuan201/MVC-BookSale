@@ -19,8 +19,8 @@ namespace BookSale.Managerment.DataAccess
                     - Kiểm tra xem cơ sở dữ liệu đã tồn tại chưa, nếu chưa, nó sẽ tạo cơ sở dữ liệu và các bảng tương ứng.
                     - Không hỗ trợ EF Core Migrations, nghĩa là nếu bạn thay đổi mô hình dữ liệu (thêm/sửa cột), bạn phải xóa và tạo lại cơ sở dữ liệu.
                     - Thích hợp cho các dự án thử nghiệm hoặc các ứng dụng nhỏ, không dùng khi làm việc với cơ sở dữ liệu đã triển khai thực tế. 
+                    - câu lệnh appContext.Database.EnsureCreated()
                 */
-                //appContext.Database.EnsureCreated();
 
                 /*
                 // generate database

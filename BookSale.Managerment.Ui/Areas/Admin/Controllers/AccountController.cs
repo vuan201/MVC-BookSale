@@ -1,4 +1,5 @@
-﻿using BookSale.Managerment.Application.Abstracts;
+﻿using AutoMapper;
+using BookSale.Managerment.Application.Abstracts;
 using BookSale.Managerment.Application.DTOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -11,9 +12,11 @@ namespace BookSale.Managerment.Ui.Areas.Admin.Controllers
     public class AccountController : Controller
     {
         private readonly IUserService _userService;
-        public AccountController(IUserService userService)
+        private readonly IMapper _mapper;
+        public AccountController(IUserService userService, IMapper mapper)
         {
             _userService = userService;
+            _mapper = mapper;
         }
 
         public IActionResult AccountManagerment()
@@ -23,12 +26,12 @@ namespace BookSale.Managerment.Ui.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult GetListAccounts(RequestFilterModel filter)
         {
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if(filter == null || filter.Limit <= 0 || filter.Offset < 0)
+            if (filter == null || filter.Limit <= 0 || filter.Offset < 0)
             {
                 return BadRequest(new { message = "Params khôn hợp lệ!" });
             }
@@ -41,16 +44,24 @@ namespace BookSale.Managerment.Ui.Areas.Admin.Controllers
         {
             return View();
         }
-        public IActionResult Create()
+        public async Task<IActionResult> Save(string? id)
         {
-            return View(new UserRequestModel());
+            var user = !string.IsNullOrEmpty(id) ? await _userService.GetUserById(id) : new UserDto();
+
+            return View(user);
         }
         [HttpPost]
-        public async Task<IActionResult> Create(UserRequestModel model)
+        public async Task<IActionResult> Save(UserDto model)
         {
             // Kiểm tra validation trước
             if (!ModelState.IsValid)
             {
+                var errors = ModelState.Values
+                            .SelectMany(v => v.Errors)
+                            .Select(e => e.ErrorMessage)
+                            .ToList();
+
+                ModelState.AddModelError("ErrorMessage", string.Join(", ", errors));
                 // Gửi lại model để giữ lỗi hiển thị
                 return View(model);
             }
@@ -61,7 +72,7 @@ namespace BookSale.Managerment.Ui.Areas.Admin.Controllers
             if (result.Status)
             {
                 // Nếu thành công, chuyển hướng về trang quản lý tài khoản
-                return Redirect(nameof(AccountManagerment));
+                return Redirect(nameof(AccountManagerment), "Account");
             }
 
             // Nếu có lỗi từ service, thêm vào ModelState để hiển thị

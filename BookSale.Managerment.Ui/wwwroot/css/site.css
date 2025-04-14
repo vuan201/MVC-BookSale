@@ -408,3 +408,20 @@ a.redirect-button:hover {
   color: #cbd5e0;
   /* Màu xám nhạt */
 }
+
+/* table */
+.table-action-btns > a{
+  margin-right: 12px;
+}
+.table-action-btns{
+  margin-right: -12px;
+}
+.form-control:disabled, .asColorPicker-input:disabled, .dataTables_wrapper select:disabled, .jsgrid .jsgrid-table .jsgrid-filter-row input:disabled[type=text],
+  .jsgrid .jsgrid-table .jsgrid-filter-row select:disabled, .jsgrid .jsgrid-table .jsgrid-filter-row input:disabled[type=number], .select2-container--default .select2-selection--single:disabled, .select2-container--default .select2-selection--single .select2-search__field:disabled, .typeahead:disabled,
+  .tt-query:disabled,
+  .tt-hint:disabled, .form-control[readonly], .asColorPicker-input[readonly], .dataTables_wrapper select[readonly], .jsgrid .jsgrid-table .jsgrid-filter-row input[readonly][type=text],
+  .jsgrid .jsgrid-table .jsgrid-filter-row select[readonly], .jsgrid .jsgrid-table .jsgrid-filter-row input[readonly][type=number], .select2-container--default .select2-selection--single[readonly], .select2-container--default .select2-selection--single .select2-search__field[readonly], .typeahead[readonly],
+  .tt-query[readonly],
+  .tt-hint[readonly] {
+    background-color: #2A3038;
+    opacity: 1; }

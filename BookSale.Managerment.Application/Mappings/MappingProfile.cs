@@ -9,11 +9,11 @@ namespace BookSale.Managerment.Application.Mappings
         public MappingProfile()
         {
             // User mappings
-            CreateMap<ApplicationUser, UserDTO>().ReverseMap();
-            CreateMap<ApplicationUser, UserRequestModel>();
-            CreateMap<UserRequestModel, ApplicationUser>()
-                .ForMember(dest => dest.Id, opt => opt.Ignore()); // Không map Id
-            // CreateMap<List<ApplicationUser>, List<UserDTO>>().ReverseMap();
+            CreateMap<ApplicationUser, UserDto>();
+            CreateMap<UserDto, ApplicationUser>()
+                .ForMember(dest => dest.Id, opt => opt.Ignore()) // Khï¿½ng map Id
+                .ForMember(dest => dest.UserName, opt => opt.Condition((src, dest, srcMember, destMember) => destMember == null));
+            // CreateMap<List<ApplicationUser>, List<UserDto>>().ReverseMap();
 
             // Genre mappings
             CreateMap<Genres, GenreDTO>().ReverseMap();

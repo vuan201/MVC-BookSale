@@ -11,7 +11,7 @@
                 <h4>Danh sách tài khoản</h4>
             </div>
             <div class="card-action">
-                @await Html.PartialAsync("../Components/_RedirectButton.cshtml", new _RedirectButtonModel("Thêm tài khoản", "Create", "Account"))
+                @await Html.PartialAsync("../Components/_RedirectButton.cshtml", new _RedirectButtonModel("Thêm tài khoản", "Save", "Account"))
             </div>
         </div>
     </div>
@@ -32,7 +32,7 @@
                 data-loading-template="customLoading">
                 <thead>
                     <tr>
-                        <th data-field="id">Id</th>
+                        <th data-field="id" data-formatter="actionFormatter">Action</th>
                         <th data-field="userName">Tên đăng nhập</th>
                         <th data-field="fullName">Họ tên</th>
                         <th data-field="email">Email </th>
@@ -51,6 +51,17 @@
         }
         function customLoading(loadingMessage) {
             return loader;
+        }
+        function actionFormatter(value, row, index){
+            var html = `
+                <div class="table-action-btns d-flex justify-content-center align-items-center">
+                    <a href="/Admin/Account/Save/${value}" class="btn btn-dark btn-icon-text">
+                        Edit
+                        <i class="mdi mdi-file-check btn-icon-append"></i>
+                    </a>
+                </div>
+            `;
+            return html;
         }
     </script>
 }

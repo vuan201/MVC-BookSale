@@ -15,15 +15,12 @@ namespace BookSale.Managerment.Application.Service
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly IMapper _mapper;
         public AuthenticationService(
             UserManager<ApplicationUser> userManager,
-            SignInManager<ApplicationUser> signInManager,
-            IMapper mapper)
+            SignInManager<ApplicationUser> signInManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
-            _mapper = mapper;
         }
 
         public async Task<ResponseModel> CheckLogin(string username, string password, bool rememberMe)
@@ -35,7 +32,7 @@ namespace BookSale.Managerment.Application.Service
                 return new ResponseModel(false, "Tài khoản không tồn tại");
             }
             // Kiểm tra email đã được xác thực chưa (nếu yêu cầu xác thực email)
-            if (await _userManager.IsEmailConfirmedAsync(user) == false && _userManager.Options.SignIn.RequireConfirmedEmail)
+            if (!await _userManager.IsEmailConfirmedAsync(user) && _userManager.Options.SignIn.RequireConfirmedEmail)
             {
                 return new ResponseModel(false, "Email chưa được xác thực");
             }
@@ -48,14 +45,11 @@ namespace BookSale.Managerment.Application.Service
 
             // Kiểm tra mật khẩu có khớp không
             var result = await _signInManager.PasswordSignInAsync(user, password, isPersistent: rememberMe, lockoutOnFailure: true);
-            if (result.IsLockedOut)
+            if (result.IsLockedOut && user.LockoutEnd != null)
             {
                 // Nếu tài khoản bị khóa, trả về thông báo và thời gian còn lại để mở khóa
-                if (user.LockoutEnd != null)
-                {
-                    var remainingLockot = user.LockoutEnd.Value - DateTimeOffset.UtcNow;
-                    return new ResponseModel(false, $"Tài khoản đã bị khóa, vui lòng thử lại sau {Math.Round(remainingLockot.TotalSeconds)}");
-                }
+                var remainingLockot = user.LockoutEnd.Value - DateTimeOffset.UtcNow;
+                return new ResponseModel(false, $"Tài khoản đã bị khóa, vui lòng thử lại sau {Math.Round(remainingLockot.TotalSeconds)}");
             }
             if (result.Succeeded)
             {
@@ -83,8 +77,6 @@ namespace BookSale.Managerment.Application.Service
             else
             {
                 return new ResponseModel(false, "Tài khoản hoặc mật khẩu không chính xác");
-
-                // return new ResponseModel(false, "Đăng nhập thất bại: " + (result.ToString() ?? "Lỗi không xác định"));
             }
         }
         public async Task Logout()
