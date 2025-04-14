@@ -72,7 +72,7 @@ namespace BookSale.Managerment.Ui.Areas.Admin.Controllers
             if (result.Status)
             {
                 // Nếu thành công, chuyển hướng về trang quản lý tài khoản
-                return Redirect(nameof(AccountManagerment), "Account");
+                return RedirectToAction(nameof(AccountManagerment), "Account");
             }
 
             // Nếu có lỗi từ service, thêm vào ModelState để hiển thị
