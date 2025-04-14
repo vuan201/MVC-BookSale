@@ -5,6 +5,10 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using BookSale.Managerment.Domain.Extension;
+using DotNetEnv;
+using dotenv.net;
+using BookSale.Managerment.Domain.constants;
+using BookSale.Managerment.Domain;
 namespace BookSale.Managerment.DataAccess
 {
     public static class ConfigurationService
@@ -33,18 +37,16 @@ namespace BookSale.Managerment.DataAccess
         }
         public static async Task SeedData(this WebApplication webApplication, Microsoft.Extensions.Configuration.ConfigurationManager configuration)
         {
-            // Định nghĩa đường dẫn tới file .env (nằm ngoài thư mục BE)
-            string filePath = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory()).FullName, ".env");
-
-            // Đọc file .env
-            var envVars = LoadEnvFile.Load(filePath);
+            // Load file .env
+            DotEnv.Load(new DotEnvOptions(envFilePaths: new[] { Setup.EnvPath }));
+            //DotEnv.Load(options: new DotEnvOptions(probeForEnv: true));
 
             // Lấy các biến môi trường từ file .env
-            string baseRole = envVars["ROLE"] ?? "SupperAdmin";
-            string userName = envVars["SUPPER_ADMIN_USERNAME"] ?? "SupperAdmin";
-            string password = envVars["SUPPER_ADMIN_PASSWORD"] ?? "Sa@12345!";
-            string fullName = envVars["SUPPER_ADMIN_FULLNAME"] ?? "Supper Admin";
-            string email = envVars["SUPPER_ADMIN_EMAIL"] ?? "supperadmin@gmail.com";
+            string baseRole = Environment.GetEnvironmentVariable("ROLE") ?? Roles.SupperAdmin;
+            string userName = Environment.GetEnvironmentVariable("SUPPER_ADMIN_USERNAME") ?? "SupperAdmin";
+            string password = Environment.GetEnvironmentVariable("SUPPER_ADMIN_PASSWORD") ?? "Sa@12345!";
+            string fullName = Environment.GetEnvironmentVariable("SUPPER_ADMIN_FULLNAME") ?? "Supper Admin";
+            string email = Environment.GetEnvironmentVariable("SUPPER_ADMIN_EMAIL") ?? "supperadmin@gmail.com";
 
             using (var scope = webApplication.Services.CreateScope())
             {

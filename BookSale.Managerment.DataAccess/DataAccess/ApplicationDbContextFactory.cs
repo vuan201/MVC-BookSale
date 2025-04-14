@@ -2,10 +2,8 @@ using BookSale.Managerment.Domain.Extension;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Configuration.Json;
-using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
-using System;
-using System.IO;
+using DotNetEnv;
+using dotenv.net;
 namespace BookSale.Managerment.DataAccess.DataAccess
 {
     public class ApplicationDbContextFactory : IDesignTimeDbContextFactory<ApplicationDbContext>
@@ -13,13 +11,10 @@ namespace BookSale.Managerment.DataAccess.DataAccess
         public ApplicationDbContext CreateDbContext(string[] args)
         {
             // Load file .env
-            string filePath = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory()).FullName, ".env");
-
-            // Đọc file .env
-            var envVars = LoadEnvFile.Load(filePath);
+            DotEnv.Load(options: new DotEnvOptions(probeForEnv: true));
 
             // Lấy biến môi trường xác định môi trường hiện tại
-            var environment = envVars["ASPNETCORE_ENVIRONMENT"];
+            var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
             Console.WriteLine($"Current Environment: {environment}");
 
             // Lấy đường dẫn thư mục gốc của dự án
@@ -30,7 +25,7 @@ namespace BookSale.Managerment.DataAccess.DataAccess
             string configPath = Path.Combine(basePath, "..\\BookSale.Managerment.Ui", $"appsettings.{environment}json");
 
             // Nếu không tìm thấy, sử dụng connection string mặc định trong file .env
-            var connectionString = envVars["DB_CONNECTION"];
+            var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION");
 
             // Nếu có file appsettings, đọc connection string từ đó
             if (File.Exists(configPath))

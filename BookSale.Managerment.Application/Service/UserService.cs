@@ -70,7 +70,6 @@ namespace BookSale.Managerment.Application.Service
             if (actionType == ActionType.Insert)
             {
                 var result = await Create(model);
-                // Nếu có lỗi, lấy thông báo lỗi từ Result
 
                 if (result.Status)
                 {

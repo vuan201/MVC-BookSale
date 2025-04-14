@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+	<None Update="..\..env">
+		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	</None>
+	<PackageReference Include="dotenv.net" Version="3.2.1" />
 	<PackageReference Include="EntityFramework" Version="6.5.1" />
 	<PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="8.0.10" />
 	<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.10" />

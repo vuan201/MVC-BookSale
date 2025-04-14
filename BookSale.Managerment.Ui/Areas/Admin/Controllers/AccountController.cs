@@ -61,7 +61,9 @@ namespace BookSale.Managerment.Ui.Areas.Admin.Controllers
                             .Select(e => e.ErrorMessage)
                             .ToList();
 
+                // Thêm lỗi vào ModelState
                 ModelState.AddModelError("ErrorMessage", string.Join(", ", errors));
+
                 // Gửi lại model để giữ lỗi hiển thị
                 return View(model);
             }
