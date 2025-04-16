@@ -8,7 +8,14 @@
       <div class="profile-desc">
         <div class="profile-pic">
           <div class="count-indicator">
-            <img class="img-xs rounded-circle " src="~/assets/images/faces/face15.jpg" alt="">
+            @if (@ViewBag.AvatarUrl != null)
+            {
+              <img class="img-xs rounded-circle" src="@ViewBag.AvatarUrl" alt="">
+            }
+            else
+            {
+              <img class="img-xs rounded-circle" src="~/assets/images/faces/face15.jpg" alt="">
+            }
             <span class="count bg-success"></span>
           </div>
           <div class="profile-name">
@@ -63,8 +70,10 @@
       </a>
       <div class="collapse" id="ui-basic">
         <ul class="nav flex-column sub-menu">
-          <li class="nav-item"> <a class="nav-link" asp-action="AccountManagerment" asp-controller="Account">Quản lý tài khoản</a></li>
-          <li class="nav-item"> <a class="nav-link" asp-action="RoleManagerment" asp-controller="Account">Quản lý quyền</a></li>
+          <li class="nav-item"> <a class="nav-link" asp-action="AccountManagerment" asp-controller="Account">Quản lý tài
+              khoản</a></li>
+          <li class="nav-item"> <a class="nav-link" asp-action="RoleManagerment" asp-controller="Account">Quản lý
+              quyền</a></li>
         </ul>
       </div>
     </li>

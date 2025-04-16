@@ -1,6 +1,7 @@
-﻿﻿using BookSale.Managerment.DataAccess.Configuration;
+﻿using BookSale.Managerment.DataAccess.Configuration;
 using BookSale.Managerment.DataAccess;
 using Microsoft.Extensions.Options;
+using BookSale.Managerment.Ui.Areas.Admin.Controllers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,11 +28,17 @@ builder.Services.AddControllersWithViews()
 builder.Services.LocalizationConfiguration();
 
 // Đăng ký session state.
-builder.Services.AddSession(options => {
+builder.Services.AddSession(options =>
+{
     // Thiết lập thời gian chờ tối đa của một phiên làm việc.
     options.IdleTimeout = TimeSpan.FromSeconds(60);
 });
+builder.Services.AddScoped<UserInfoFilter>();
 
+builder.Services.AddControllersWithViews(options =>
+{
+    options.Filters.Add<UserInfoFilter>(); // Apply globally
+});
 var app = builder.Build();
 
 app.AutoMigrations().GetAwaiter().GetResult();
