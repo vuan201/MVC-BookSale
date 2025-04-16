@@ -58,9 +58,9 @@ namespace BookSale.Managerment.Application.Service
                 {
                     await _userManager.ResetAccessFailedCountAsync(user);
                 }
-
                 return new ResponseModel(true, "Đăng nhập thành công");
             }
+            
             // Kiểm tra trạng thái IsActive của tài khoản
             else if (!user.IsActive)
             {

@@ -11,17 +11,20 @@ namespace BookSale.Managerment.Application.Service
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IMapper _mapper;
+        private readonly ICloudinaryService _cloundinaryService;
 
         public UserService(
             UserManager<ApplicationUser> userManager,
-            IMapper mapper)
+            IMapper mapper,
+            ICloudinaryService cloundinaryService)
         {
             _userManager = userManager;
             _mapper = mapper;
+            _cloundinaryService = cloundinaryService;
         }
         public async Task<UserDto?> GetUserByUserName(string username)
         {
-            if(!string.IsNullOrEmpty(username))
+            if (!string.IsNullOrEmpty(username))
             {
                 var user = await _userManager.FindByNameAsync(username);
                 if (user != null)
@@ -34,7 +37,8 @@ namespace BookSale.Managerment.Application.Service
             if (!string.IsNullOrEmpty(userId))
             {
                 var user = await _userManager.FindByIdAsync(userId);
-                if (user != null) {
+                if (user != null)
+                {
                     var userDto = _mapper.Map<UserDto>(user);
 
                     var roles = await _userManager.GetRolesAsync(user);
@@ -93,9 +97,18 @@ namespace BookSale.Managerment.Application.Service
         }
         public async Task<ResponseModel> Create(UserDto model)
         {
+            // Kiểm tra trùng tên đăng nhập
             if (await _userManager.FindByNameAsync(model.UserName) != null)
                 return new ResponseModel(false, "Tên đăng nhập đã tồn tại");
 
+            // Kiểm tra trùng email
+            if (await _userManager.FindByEmailAsync(model.Email) != null)
+                return new ResponseModel(false, "Email đã tồn tại");
+
+            // Kiểm tra mật khẩu
+            if (model.Password == null) return new ResponseModel(false, "Mật khẩu không hợp lệ");
+
+            // Tạo tài khoản mới
             var user = new ApplicationUser();
 
             _mapper.Map(model, user);
@@ -104,13 +117,25 @@ namespace BookSale.Managerment.Application.Service
 
             var result = await _userManager.CreateAsync(user, model.Password);
 
-            if (result.Succeeded)
-            {
-                await _userManager.AddToRoleAsync(user, model.RoleName);
+            // Nếu tạo tài khoản thất bại thì trả về lỗi
+            if (!result.Succeeded)
+                return new ResponseModel(false, string.Join("<br/>", result.Errors.Select(i => i.Description)));
 
-                return new ResponseModel(true, "Tạo tài khoản thành công");
+            // Thêm role cho user
+            await _userManager.AddToRoleAsync(user, model.RoleName);
+
+            // Upload ảnh lên cloudinary
+            if (model.Avata != null)
+            {
+                var uploadResult = await _cloundinaryService.UploadImage(model.Avata, user.Id);
+
+                if (!uploadResult.Status)
+                {
+                    return new ResponseModel(false, $"Upload hình ảnh thất bại. {uploadResult.Message}");
+                }
             }
-            return new ResponseModel(false, string.Join("<br/>", result.Errors.Select(i => i.Description)));
+
+            return new ResponseModel(true, "Tạo tài khoản thành công");
         }
         public async Task<ResponseModel> Update(UserDto model)
         {
@@ -118,20 +143,26 @@ namespace BookSale.Managerment.Application.Service
 
             var user = await _userManager.FindByIdAsync(model.Id);
 
-            if(user == null) return new ResponseModel(false, "Không tìm thấy tài khoản");
+            if (user == null) return new ResponseModel(false, "Không tìm thấy tài khoản");
 
             _mapper.Map(model, user);
 
             var result = await _userManager.UpdateAsync(user);
 
-            if(result.Succeeded)
+            if (result.Succeeded)
             {
+                if (model.Avata != null)
+                {
+                    await _cloundinaryService.UploadImage(model.Avata, user.Id);
+                }
+
                 var hasRole = await _userManager.IsInRoleAsync(user, model.RoleName);
                 if (!hasRole)
                 {
                     var role = (await _userManager.GetRolesAsync(user)).FirstOrDefault();
 
-                    if(role != null){
+                    if (role != null)
+                    {
                         var removeRoleResult = await _userManager.RemoveFromRoleAsync(user, role);
 
                         if (removeRoleResult.Succeeded)
@@ -139,7 +170,8 @@ namespace BookSale.Managerment.Application.Service
                             await _userManager.AddToRoleAsync(user, model.RoleName);
                         }
                     }
-                    else {
+                    else
+                    {
                         await _userManager.AddToRoleAsync(user, model.RoleName);
                     }
                 }

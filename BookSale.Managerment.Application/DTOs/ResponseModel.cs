@@ -25,11 +25,16 @@ namespace BookSale.Managerment.Application.DTOs
     {
         public int Total { get; set; }
         public T? Rows { get; set; }
+        public T? Data { get; set; }
 
-        public ResponseModel(bool status, string message,int Total, T? rows = null) : base(status, message)
+        public ResponseModel(bool status, string message, int Total, T? rows = null) : base(status, message)
         {
             this.Total = Total;
             this.Rows = rows;
+        }
+        public ResponseModel(T data) : base(true, "Success")
+        {
+            this.Data = data;
         }
     }
 }

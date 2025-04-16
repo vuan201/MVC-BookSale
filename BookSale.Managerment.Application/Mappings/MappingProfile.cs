@@ -1,6 +1,7 @@
 using AutoMapper;
 using BookSale.Managerment.Application.DTOs;
 using BookSale.Managerment.Domain.Entity;
+using CloudinaryDotNet.Actions;
 
 namespace BookSale.Managerment.Application.Mappings
 {
@@ -13,8 +14,10 @@ namespace BookSale.Managerment.Application.Mappings
             CreateMap<UserDto, ApplicationUser>()
                 .ForMember(dest => dest.Id, opt => opt.Ignore()) // Kh�ng map Id
                 .ForMember(dest => dest.UserName, opt => opt.Condition((src, dest, srcMember, destMember) => destMember == null));
-            // CreateMap<List<ApplicationUser>, List<UserDto>>().ReverseMap();
-
+            
+            // Cloudinary response mapping
+            CreateMap<ImageUploadResult, CloudinaryResponse>();
+            
             // Genre mappings
             CreateMap<Genres, GenreDTO>().ReverseMap();
 
