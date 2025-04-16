@@ -84,10 +84,13 @@ namespace BookSale.Managerment.DataAccess.Configuration
             service.AddScoped<PasswordHasher<ApplicationUser>>();
             service.AddScoped<IUnitOfWork, UnitOFWork>();
 
-            // Đăng ký các dịch vụ
+            // Đăng ký các dịch vụ khác
             service.AddScoped<IAuthenticationService, AuthenticationService>();
             service.AddScoped<IUserService, UserService>();
             service.AddScoped<IRoleService, RoleService>();
+
+            // Đăng ký dịch vụ Cloudinary
+            service.AddScoped<ICloudinaryService, ClondinaryService>();
 
             // Đăng ký AutoMapper
             service.AddAutoMapper(typeof(MappingProfile));

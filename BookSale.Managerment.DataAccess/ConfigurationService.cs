@@ -39,14 +39,13 @@ namespace BookSale.Managerment.DataAccess
         {
             // Load file .env
             DotEnv.Load(new DotEnvOptions(envFilePaths: new[] { Setup.EnvPath }));
-            //DotEnv.Load(options: new DotEnvOptions(probeForEnv: true));
 
             // Lấy các biến môi trường từ file .env
             string baseRole = Environment.GetEnvironmentVariable("ROLE") ?? Roles.SupperAdmin;
-            string userName = Environment.GetEnvironmentVariable("SUPPER_ADMIN_USERNAME") ?? "SupperAdmin";
-            string password = Environment.GetEnvironmentVariable("SUPPER_ADMIN_PASSWORD") ?? "Sa@12345!";
-            string fullName = Environment.GetEnvironmentVariable("SUPPER_ADMIN_FULLNAME") ?? "Supper Admin";
-            string email = Environment.GetEnvironmentVariable("SUPPER_ADMIN_EMAIL") ?? "supperadmin@gmail.com";
+            string userName = Environment.GetEnvironmentVariable("SUPPER_ADMIN_USERNAME") ?? Setup.UserName;
+            string password = Environment.GetEnvironmentVariable("SUPPER_ADMIN_PASSWORD") ?? Setup.password;
+            string fullName = Environment.GetEnvironmentVariable("SUPPER_ADMIN_FULLNAME") ?? Setup.FullName;
+            string email = Environment.GetEnvironmentVariable("SUPPER_ADMIN_EMAIL") ?? Setup.Email;
 
             using (var scope = webApplication.Services.CreateScope())
             {
@@ -74,7 +73,7 @@ namespace BookSale.Managerment.DataAccess
                             Address = "Việt Nam",
                             IsActive = true,
                             AccessFailedCount = 0,
-                            PhoneNumber = "0989771234",
+                            PhoneNumber = Setup.PhoneNumber,
                         };
 
                         // thiết lập user mạc định

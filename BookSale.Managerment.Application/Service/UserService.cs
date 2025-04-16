@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BookSale.Managerment.Application.Abstracts;
 using BookSale.Managerment.Application.DTOs;
+using BookSale.Managerment.Domain.constants;
 using BookSale.Managerment.Domain.Entity;
 using BookSale.Managerment.Domain.Enums;
 using Microsoft.AspNetCore.Identity;
@@ -127,7 +128,7 @@ namespace BookSale.Managerment.Application.Service
             // Upload ảnh lên cloudinary
             if (model.Avata != null)
             {
-                var uploadResult = await _cloundinaryService.UploadImage(model.Avata, user.Id);
+                var uploadResult = await _cloundinaryService.UploadImage(model.Avata, $"{CloudinaryFolder.Avatars}/{user.Id}");
 
                 if (!uploadResult.Status)
                 {
@@ -153,7 +154,7 @@ namespace BookSale.Managerment.Application.Service
             {
                 if (model.Avata != null)
                 {
-                    await _cloundinaryService.UploadImage(model.Avata, user.Id);
+                    await _cloundinaryService.UploadImage(model.Avata, $"{CloudinaryFolder.Avatars}/{user.Id}");
                 }
 
                 var hasRole = await _userManager.IsInRoleAsync(user, model.RoleName);
