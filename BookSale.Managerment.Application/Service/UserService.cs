@@ -17,11 +17,11 @@ namespace BookSale.Managerment.Application.Service
         public UserService(
             UserManager<ApplicationUser> userManager,
             IMapper mapper,
-            IStorageService cloundinaryService)
+            IStorageServiceFactory storageServiceFactory)
         {
             _userManager = userManager;
             _mapper = mapper;
-            _cloundinaryService = cloundinaryService;
+            _cloundinaryService = storageServiceFactory.GetStorageService(StorageType.Cloudinary);
         }
         public async Task<UserDto?> GetUserByUserName(string username)
         {

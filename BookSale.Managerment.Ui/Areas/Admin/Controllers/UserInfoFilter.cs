@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using BookSale.Managerment.Application.Abstracts;
 using BookSale.Managerment.Domain.constants;
+using BookSale.Managerment.Domain.Enums;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 namespace BookSale.Managerment.Ui.Areas.Admin.Controllers
@@ -8,11 +9,11 @@ namespace BookSale.Managerment.Ui.Areas.Admin.Controllers
     [Area("Admin")]
     public class UserInfoFilter : IActionFilter
     {
-        private readonly ICloudinaryService _cloudinaryService;
+        private readonly IStorageService _cloudinaryService;
 
-        public UserInfoFilter(ICloudinaryService cloudinaryService)
+        public UserInfoFilter(IStorageServiceFactory storageServiceFactory)
         {
-            _cloudinaryService = cloudinaryService;
+            _cloudinaryService = storageServiceFactory.GetStorageService(StorageType.Cloudinary);
         }
 
         public void OnActionExecuting(ActionExecutingContext context)

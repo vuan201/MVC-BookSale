@@ -98,11 +98,11 @@ namespace BookSale.Managerment.DataAccess.Configuration
             // Đăng ký các dịch vụ Storage
 
             // Đăng ký Storage Factory
-            service.AddScoped<StorageServiceFactory>();
+            service.AddScoped<IStorageServiceFactory, StorageServiceFactory>();
             
             // Đăng ký dịch vụ Cloudinary
             service.AddScoped<CloudinaryService>();
-            
+
             // services.AddScoped<FirebaseStorageService>();
             // services.AddScoped<AzureBlobStorageService>();
             // services.AddScoped<AwsS3StorageService>();

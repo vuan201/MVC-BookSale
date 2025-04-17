@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace BookSale.Managerment.Application.Service
 {
-    public class StorageServiceFactory
+    public class StorageServiceFactory : IStorageServiceFactory
     {
         private readonly IServiceProvider _serviceProvider;
 
