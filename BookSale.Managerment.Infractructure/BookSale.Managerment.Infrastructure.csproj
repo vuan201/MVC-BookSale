@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="8.0.10" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\BookSale.Managerment.Application\BookSale.Managerment.Application.csproj" />
     <ProjectReference Include="..\BookSale.Managerment.DataAccess\BookSale.Managerment.DataAccess.csproj" />
   </ItemGroup>

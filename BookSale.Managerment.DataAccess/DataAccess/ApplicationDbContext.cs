@@ -17,5 +17,7 @@ namespace BookSale.Managerment.DataAccess.DataAccess
         public DbSet<BookTags> BookTags { get; set; }
         public DbSet<Genres> Genres { get; set; }
         public DbSet<Tags> Tags { get; set; }
+        public DbSet<CloudStorages> CloudStorages { get; set; }
+        public DbSet<Files> Files { get; set; }
     }
 }

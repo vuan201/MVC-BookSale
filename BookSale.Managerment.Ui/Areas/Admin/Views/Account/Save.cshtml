@@ -86,7 +86,14 @@
           <h4 class="card-title">Ảnh đại diện</h4>
           <div class="form-image">
             <div class="no-image">
+            @if (string.IsNullOrEmpty(Model.Id))
+            {
               <img class="img-thumbnail " alt="avatar.jpg" src="~/image/no_image.jpg" />
+            }
+            else
+            {
+              <img class="img-xs rounded-circle" src="@ViewBag.AvatarUrl" alt="">
+            }
             </div>
             <div class="input-file-image">
               <div class=" input-group d-flex align-items-center">

@@ -27,8 +27,13 @@ namespace BookSale.Managerment.DataAccess.Configuration
             var serverVersion = new MySqlServerVersion(new Version(8, 0, 23));
 
             // Đăng ký DbContext và cấu hình kết nối cơ sở dữ liệu
-            service.AddDbContext<ApplicationDbContext>(options =>
-                options.UseMySql(connectionString, serverVersion));
+            service.AddDbContext<ApplicationDbContext>(options => {
+                // Sử dụng MySQL với chuỗi kết nối và phiên bản của MySqlServerVersion
+                options.UseMySql(connectionString, serverVersion);
+
+                // Cho phép sử dụng lazy loading proxies để tải các đối tượng liên quan 
+                options.UseLazyLoadingProxies(); 
+            });
 
             // Cấu hình dịch vụ Identity
             service.AddIdentity<ApplicationUser, IdentityRole>(options =>

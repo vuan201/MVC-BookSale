@@ -17,7 +17,10 @@ namespace BookSale.Managerment.Application.Service
         {
             DotEnv.Load(new DotEnvOptions(envFilePaths: new[] { Setup.EnvPath }));
 
-            this._cloudinary = new Cloudinary(Environment.GetEnvironmentVariable("CLOUDINARY_URL"));
+            this._cloudinary = new Cloudinary(Environment.GetEnvironmentVariable("CLOUDINARY_URL"))
+            {
+                Api = { Secure = true } // Bắt buộc dùng HTTPS
+            };
             this._mapper = mapper;
         }
 

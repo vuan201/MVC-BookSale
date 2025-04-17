@@ -11,8 +11,9 @@ namespace BookSale.Managerment.Domain.Entity
 
         [ForeignKey(nameof(BookId))]
         public virtual Books Books { get; set; }
+        public int? ImageId { get; set; }
 
-        [StringLength(500)]
-        public string ImageUrl { get; set; }
+        [ForeignKey(nameof(ImageId))]
+        public virtual Files? Images { get; set; }
     }
 }
