@@ -94,8 +94,18 @@ namespace BookSale.Managerment.DataAccess.Configuration
             service.AddScoped<IUserService, UserService>();
             service.AddScoped<IRoleService, RoleService>();
 
+            // ===================================================
+            // Đăng ký các dịch vụ Storage
+
+            // Đăng ký Storage Factory
+            service.AddScoped<StorageServiceFactory>();
+            
             // Đăng ký dịch vụ Cloudinary
-            service.AddScoped<ICloudinaryService, ClondinaryService>();
+            service.AddScoped<CloudinaryService>();
+            
+            // services.AddScoped<FirebaseStorageService>();
+            // services.AddScoped<AzureBlobStorageService>();
+            // services.AddScoped<AwsS3StorageService>();
 
             // Đăng ký AutoMapper
             service.AddAutoMapper(typeof(MappingProfile));

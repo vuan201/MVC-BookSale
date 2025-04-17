@@ -12,12 +12,12 @@ namespace BookSale.Managerment.Application.Service
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IMapper _mapper;
-        private readonly ICloudinaryService _cloundinaryService;
+        private readonly IStorageService _cloundinaryService;
 
         public UserService(
             UserManager<ApplicationUser> userManager,
             IMapper mapper,
-            ICloudinaryService cloundinaryService)
+            IStorageService cloundinaryService)
         {
             _userManager = userManager;
             _mapper = mapper;

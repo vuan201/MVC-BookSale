@@ -9,11 +9,11 @@ using Microsoft.AspNetCore.Http;
 
 namespace BookSale.Managerment.Application.Service
 {
-    public class ClondinaryService : ICloudinaryService
+    public class CloudinaryService : IStorageService
     {
         private readonly Cloudinary _cloudinary;
         private readonly IMapper _mapper;
-        public ClondinaryService(IMapper mapper)
+        public CloudinaryService(IMapper mapper)
         {
             DotEnv.Load(new DotEnvOptions(envFilePaths: new[] { Setup.EnvPath }));
 
