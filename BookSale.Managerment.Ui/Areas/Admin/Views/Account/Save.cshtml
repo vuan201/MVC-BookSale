@@ -2,153 +2,157 @@
 @model BookSale.Managerment.Application.DTOs.UserDto
 
 @{
-  var errors = ViewData.ModelState["ErrorMessage"]?.Errors;
+    var errors = ViewData.ModelState["ErrorMessage"]?.Errors;
 }
 
 <form class="forms-sample" asp-action="Save" asp-controller="Account" method="post" enctype="multipart/form-data">
-  @Html.AntiForgeryToken()
-  <div class="row">
-    <div class="col-md-6 grid-margin stretch-card">
-      <div class="card">
-        <div class="card-body">
-          <input type="hidden" name="Id" asp-for="Id" />
-          <h4 class="card-title">Tạo tài khoản mới</h4>
-          <div class="form-group">
-            <label for="Tole">Role</label>
-            @* @Html.DropDownListFor(x => x.RoleName, (IEnumerable<SelectListItem>)roleList, "Chọn role",new{@class =
-            "form-control"} ) *@
-            <select class="form-control" asp-for="RoleName">
-              <option>--Chọn role--</option>
-              @foreach (var item in Roles.GetRoles())
-              {
-                if(!string.IsNullOrEmpty(Model.Id) && Model.RoleName == item){
-                  <option selected value="@item">@item</option>
-                } else {
-                  <option value="@item">@item</option>
-                }
-              }
-            </select>
-            <span asp-validation-for="RoleName" class="text-danger"></span>
-          </div>
-          <div class="form-group">
-            <label for="UserName">Tên đăng nhập</label>
-            @if (string.IsNullOrEmpty(Model.Id))
-            {
-              <input type="text" class="form-control" id="UserName" asp-for="UserName" placeholder="Tên đăng nhập">
-            }
-            else
-            {
-              <input type="text" class="form-control" id="UserName" asp-for="UserName" placeholder="Tên đăng nhập"
-                readonly>
-            }
-            <span asp-validation-for="UserName" class="text-danger"></span>
-          </div>
-          <div class="form-group">
-            <label for="FullName">Họ và tên</label>
-            <input type="text" class="form-control" id="FullName" asp-for="FullName" placeholder="Họ và tên">
-            <span asp-validation-for="FullName" class="text-danger"></span>
-          </div>
-          <div class="form-group">
-            <label for="Address">Địa chỉ</label>
-            <input type="Address" class="form-control" id="Address" asp-for="Address" placeholder="Địa chỉ">
-            <span asp-validation-for="Address" class="text-danger"></span>
-          </div>
-          <div class="form-group">
-            <label for="Email">Địa chỉ email</label>
-            <input type="email" class="form-control" id="Email" asp-for="Email" placeholder="Địa chỉ email">
-            <span asp-validation-for="Email" class="text-danger"></span>
-          </div>
-          <div class="form-group">
-            <label for="PhoneNumber">Số điện thoại</label>
-            <input type="number" class="form-control" id="PhoneNumber" asp-for="PhoneNumber"
-              placeholder="Số điện thoại">
-            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
-          </div>
-          @if (string.IsNullOrEmpty(Model.Id))
-          {
-            <div class="form-group">
-              <label for="exampleInputPassword1">Mật khẩu</label>
-              <input type="password" class="form-control" id="Password" asp-for="Password" placeholder="Mật khẩu">
-              <span asp-validation-for="Password" class="text-danger"></span>
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-md-6 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <input type="hidden" name="Id" asp-for="Id" />
+                    <h4 class="card-title">Tạo tài khoản mới</h4>
+                    <div class="form-group">
+                        <label for="Tole">Role</label>
+                        @* @Html.DropDownListFor(x => x.RoleName, (IEnumerable<SelectListItem>)roleList, "Chọn role",new{@class =
+                        "form-control"} ) *@
+                        <select class="form-control" asp-for="RoleName">
+                            <option>--Chọn role--</option>
+                            @foreach (var item in Roles.GetRoles())
+                            {
+                                if (!string.IsNullOrEmpty(Model.Id) && Model.RoleName == item)
+                                {
+                                    <option selected value="@item">@item</option>
+                                }
+                                else
+                                {
+                                    <option value="@item">@item</option>
+                                }
+                            }
+                        </select>
+                        <span asp-validation-for="RoleName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="UserName">Tên đăng nhập</label>
+                        @if (string.IsNullOrEmpty(Model.Id))
+                        {
+                            <input type="text" class="form-control" id="UserName" asp-for="UserName" placeholder="Tên đăng nhập">
+                        }
+                        else
+                        {
+                            <input type="text" class="form-control" id="UserName" asp-for="UserName" placeholder="Tên đăng nhập"
+                                   readonly>
+                        }
+                        <span asp-validation-for="UserName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="FullName">Họ và tên</label>
+                        <input type="text" class="form-control" id="FullName" asp-for="FullName" placeholder="Họ và tên">
+                        <span asp-validation-for="FullName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="Address">Địa chỉ</label>
+                        <input type="Address" class="form-control" id="Address" asp-for="Address" placeholder="Địa chỉ">
+                        <span asp-validation-for="Address" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="Email">Địa chỉ email</label>
+                        <input type="email" class="form-control" id="Email" asp-for="Email" placeholder="Địa chỉ email">
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="PhoneNumber">Số điện thoại</label>
+                        <input type="number" class="form-control" id="PhoneNumber" asp-for="PhoneNumber"
+                               placeholder="Số điện thoại">
+                        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                    </div>
+                    @if (string.IsNullOrEmpty(Model.Id))
+                    {
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">Mật khẩu</label>
+                            <input type="password" class="form-control" id="Password" asp-for="Password" placeholder="Mật khẩu">
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+                    }
+                    else
+                    {
+                        <input type="hidden" class="form-control" id="Password" asp-for="Password">
+                        <input type="hidden" class="form-control" id="IsActive" asp-for="IsActive">
+                    }
+                </div>
             </div>
-          }
-          else
-          {
-            <input type="hidden" class="form-control" id="Password" asp-for="Password">
-            <input type="hidden" class="form-control" id="IsActive" asp-for="IsActive">
-          }
         </div>
-      </div>
-    </div>
-    <div class="col-md-6 grid-margin stretch-card">
-      <div class="card">
-        <div class="card-body">
-          <h4 class="card-title">Ảnh đại diện</h4>
-          <div class="form-image">
-            <div class="no-image">
-            @if (string.IsNullOrEmpty(Model.Id))
-            {
-              <img class="img-thumbnail " alt="avatar.jpg" src="~/image/no_image.jpg" />
-            }
-            else
-            {
-              <img class="img-xs rounded-circle" src="@ViewBag.AvatarUrl" alt="">
-            }
+        <div class="col-md-6 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Ảnh đại diện</h4>
+                    <div class="form-image">
+                        <div class="image-big-avatar">
+                            @if (string.IsNullOrEmpty(Model.Id))
+                            {
+                                <img id="avatar-img" class="avatar no-image" alt="avatar.jpg" src="~/image/no_image.jpg" />
+                            }
+                            else
+                            {
+                                <img id="avatar-img" class="avatar" src="@ViewBag.AvatarUrl" alt="">
+                            }
+                        </div>
+                        <div class="input-file-image">
+                            <div class=" input-group d-flex align-items-center">
+                                @* <input type="file"accept="image/*" class="form-control file-upload-info" placeholder="Upload Image"> *@
+                                <div class="file-upload-wrapper"></div>
+                                <button class="custom-file-upload">Chọn Tệp</button>
+                                <input asp-for="Avata" type="file" id="file-input" accept="image/*" />
+                                <span id="file-name">Chưa có tệp nào được chọn</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="input-file-image">
-              <div class=" input-group d-flex align-items-center">
-                @* <input type="file"accept="image/*" class="form-control file-upload-info" placeholder="Upload Image"> *@
-                <div class="file-upload-wrapper"></div>
-                <button class="custom-file-upload">Chọn Tệp</button>
-                <input asp-for="Avata" type="file" id="file-input" accept="image/*" />
-                <span id="file-name">Chưa có tệp nào được chọn</span>
-              </div>
+        </div>
+    </div>
+    <div class="col-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        @if (errors != null && errors.Count > 0)
+                        {
+                            @foreach (var error in errors)
+                            {
+                                <span class="text-danger">@error.ErrorMessage</span>
+                            }
+                        }
+                    </div>
+                    <div>
+                        <button type="submit" class="btn btn-primary me-2">Lưu</button>
+                        <a asp-action="AccountManagerment" asp-controller="Account" class="btn btn-dark">Quay lại</a>
+                    </div>
+                </div>
             </div>
-          </div>
         </div>
-      </div>
     </div>
-  </div>
-  <div class="col-12 grid-margin stretch-card">
-    <div class="card">
-      <div class="card-body">
-        <div class="d-flex justify-content-between">
-          <div>
-            @if (errors != null && errors.Count > 0)
-            {
-              @foreach (var error in errors)
-              {
-                <span class="text-danger">@error.ErrorMessage</span>
-              }
-            }
-          </div>
-          <div>
-            <button type="submit" class="btn btn-primary me-2">Lưu</button>
-            <a asp-action="AccountManagerment" asp-controller="Account" class="btn btn-dark">Quay lại</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
 </form>
 @section Scripts {
-  <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
-  <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
-  <script>
-    const fileInput = document.getElementById('file-input');
-    const customButton = document.querySelector('.custom-file-upload');
-    const fileNameSpan = document.getElementById('file-name');
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/js/changeavatarevent.js"></script>
+    <script>
+        const fileImageInput = document.getElementById('file-input');
+        const customButton = document.querySelector('.custom-file-upload');
+        const fileNameSpan = document.getElementById('file-name');
 
-    customButton.addEventListener('click', () => {
-      fileInput.click();
-    });
+        customButton.addEventListener('click', () => {
+            fileImageInput.click();
+        });
 
-    fileInput.addEventListener('change', () => {
-      if (fileInput.files.length > 0) {
-        fileNameSpan.textContent = fileInput.files[0].name;
-      } else {
-        fileNameSpan.textContent = 'Chưa có tệp nào được chọn';
-      }
-    });
-  </script>
+        fileImageInput.addEventListener('change', () => {
+            if (fileImageInput.files.length > 0) {
+                fileNameSpan.textContent = fileImageInput.files[0].name;
+            } else {
+                fileNameSpan.textContent = 'Chưa có tệp nào được chọn';
+            }
+        });
+    </script>
 }

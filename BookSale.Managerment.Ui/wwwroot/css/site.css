@@ -352,18 +352,19 @@ a.redirect-button:hover {
   margin: 20px 0;
 }
 
-.no-image {
+.image-big-avatar {
   width: 200px;
 }
 
-.no-image>img {
+.image-big-avatar .avatar {
   width: 200px;
-  height: auto;
+  height: 200px;
   border-radius: 50%;
-  /* filter: blur(5px); */
+  object-fit: cover;
+}
+.image-big-avatar .no-image {
   opacity: 0.5;
 }
-
 /* Custom input type file */
 .file-upload-wrapper {
   position: relative;
@@ -410,18 +411,36 @@ a.redirect-button:hover {
 }
 
 /* table */
-.table-action-btns > a{
+.table-action-btns>a {
   margin-right: 12px;
 }
-.table-action-btns{
+
+.table-action-btns {
   margin-right: -12px;
 }
-.form-control:disabled, .asColorPicker-input:disabled, .dataTables_wrapper select:disabled, .jsgrid .jsgrid-table .jsgrid-filter-row input:disabled[type=text],
-  .jsgrid .jsgrid-table .jsgrid-filter-row select:disabled, .jsgrid .jsgrid-table .jsgrid-filter-row input:disabled[type=number], .select2-container--default .select2-selection--single:disabled, .select2-container--default .select2-selection--single .select2-search__field:disabled, .typeahead:disabled,
-  .tt-query:disabled,
-  .tt-hint:disabled, .form-control[readonly], .asColorPicker-input[readonly], .dataTables_wrapper select[readonly], .jsgrid .jsgrid-table .jsgrid-filter-row input[readonly][type=text],
-  .jsgrid .jsgrid-table .jsgrid-filter-row select[readonly], .jsgrid .jsgrid-table .jsgrid-filter-row input[readonly][type=number], .select2-container--default .select2-selection--single[readonly], .select2-container--default .select2-selection--single .select2-search__field[readonly], .typeahead[readonly],
-  .tt-query[readonly],
-  .tt-hint[readonly] {
-    background-color: #2A3038;
-    opacity: 1; }
+
+.form-control:disabled,
+.asColorPicker-input:disabled,
+.dataTables_wrapper select:disabled,
+.jsgrid .jsgrid-table .jsgrid-filter-row input:disabled[type=text],
+.jsgrid .jsgrid-table .jsgrid-filter-row select:disabled,
+.jsgrid .jsgrid-table .jsgrid-filter-row input:disabled[type=number],
+.select2-container--default .select2-selection--single:disabled,
+.select2-container--default .select2-selection--single .select2-search__field:disabled,
+.typeahead:disabled,
+.tt-query:disabled,
+.tt-hint:disabled,
+.form-control[readonly],
+.asColorPicker-input[readonly],
+.dataTables_wrapper select[readonly],
+.jsgrid .jsgrid-table .jsgrid-filter-row input[readonly][type=text],
+.jsgrid .jsgrid-table .jsgrid-filter-row select[readonly],
+.jsgrid .jsgrid-table .jsgrid-filter-row input[readonly][type=number],
+.select2-container--default .select2-selection--single[readonly],
+.select2-container--default .select2-selection--single .select2-search__field[readonly],
+.typeahead[readonly],
+.tt-query[readonly],
+.tt-hint[readonly] {
+  background-color: #2A3038;
+  opacity: 1;
+}
