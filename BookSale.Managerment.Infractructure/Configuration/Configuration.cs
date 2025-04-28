@@ -103,10 +103,6 @@ namespace BookSale.Managerment.DataAccess.Configuration
             // Đăng ký dịch vụ Cloudinary
             service.AddScoped<CloudinaryService>();
 
-            // services.AddScoped<FirebaseStorageService>();
-            // services.AddScoped<AzureBlobStorageService>();
-            // services.AddScoped<AwsS3StorageService>();
-
             // Đăng ký AutoMapper
             service.AddAutoMapper(typeof(MappingProfile));
         }
