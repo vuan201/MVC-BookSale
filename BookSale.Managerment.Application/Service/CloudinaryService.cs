@@ -39,7 +39,8 @@ namespace BookSale.Managerment.Application.Service
                 PublicId = fileKey,
                 UseFilename = true,
                 UniqueFilename = false,
-                Overwrite = true
+                Overwrite = true,
+                Transformation = new Transformation().FetchFormat("png") // Chuyển đổi định dạng sang PNG
             };
 
             var uploadResult = await _cloudinary.UploadAsync(uploadParams);

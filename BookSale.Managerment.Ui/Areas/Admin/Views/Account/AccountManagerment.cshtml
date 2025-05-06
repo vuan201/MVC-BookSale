@@ -17,22 +17,21 @@
     </div>
     <div class="card-body">
         <div class="">
-            <table 
-                id="account-table" 
-                class="table table-striped table-hover" 
-                data-toggle="table"
-                data-toolbar=".toolbar"
-                data-url="@Url.Action(nameof(AccountController.GetListAccounts))"
-                data-unique-id="id" 
-                data-side-pagination="server" 
-                data-pagination="true" 
-                data-search="true"
-                data-search-on-enter-key="true" 
-                data-query-params="customParams"
-                data-loading-template="customLoading">
+            <table id="account-table"
+                   class="table table-striped table-hover"
+                   data-toggle="table"
+                   data-toolbar=".toolbar"
+                   data-url="@Url.Action(nameof(AccountController.GetListAccounts))"
+                   data-unique-id="id"
+                   data-side-pagination="server"
+                   data-pagination="true"
+                   data-search="true"
+                   data-search-on-enter-key="true"
+                   data-query-params="customParams"
+                   data-loading-template="customLoading">
                 <thead>
                     <tr>
-                        <th data-field="id" data-formatter="actionFormatter">Action</th>
+                        <th data-field="id" data-formatter="actionFormatter"></th>
                         <th data-field="userName">Tên đăng nhập</th>
                         <th data-field="fullName">Họ tên</th>
                         <th data-field="email">Email </th>
@@ -52,13 +51,50 @@
         function customLoading(loadingMessage) {
             return loader;
         }
+        function deleteAccount(id)
+        {
+            if(id)
+            {
+                 Swal.fire({
+                    title: 'Bạn có chắc chắn muốn xóa?',
+                    text: "Hành động này không thể hoàn tác!",
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'xóa',
+                    cancelButtonText: 'Hủy',
+                    customClass: {
+                        title: 'h3 text-center text-dark', // gán class CSS tùy chỉnh
+                        confirmButton: 'btn btn-success', // Thêm class Bootstrap cho confirm button
+                        cancelButton: 'btn btn-danger'  // Thêm class Bootstrap cho cancel button
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                    var url = `@Url.Action(nameof(AccountController.Delete), "Account")/${id}`
+                    $.ajax({
+                        url: url,
+                        method:"POST",
+                        dataType: "json",
+                        success: function(respone) {
+                            console.log(respone)
+                        },
+                        error: function(xhr, status, error) {
+
+                        }
+                    })
+                    }
+                });
+            }
+        }
         function actionFormatter(value, row, index){
             var html = `
                 <div class="table-action-btns d-flex justify-content-center align-items-center">
-                    <a href="/Admin/Account/Save/${value}" class="btn btn-dark btn-icon-text">
-                        Edit
+                    <a href="/Admin/Account/Save/${value}" class="btn btn-inverse-info btn-icon-text">
                         <i class="mdi mdi-file-check btn-icon-append"></i>
                     </a>
+                     <button onclick="deleteAccount('${value}')" class="btn btn-inverse-danger btn-icon">
+                        <i class="mdi mdi-delete btn-icon-append"></i>
+                    </button>
                 </div>
             `;
             return html;

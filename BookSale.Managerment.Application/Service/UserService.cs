@@ -54,7 +54,7 @@ namespace BookSale.Managerment.Application.Service
         {
             var query = _userManager.Users.AsQueryable();
 
-            var total = query.Count();
+            var total = query.Where(i => i.IsActive).Count();
 
             if (!string.IsNullOrEmpty(filter.search))
             {
@@ -63,7 +63,7 @@ namespace BookSale.Managerment.Application.Service
                                       || x.Email.Contains(filter.search));
             }
 
-            var users = query.Skip(filter.Offset).Take(filter.Limit).ToList();
+            var users = query.Where(i => i.IsActive).Skip(filter.Offset).Take(filter.Limit).ToList();
 
             return new ResponseModel<List<UserDto>>(true, "Success", total, _mapper.Map<List<UserDto>>(users));
         }
@@ -144,7 +144,7 @@ namespace BookSale.Managerment.Application.Service
 
             var user = await _userManager.FindByIdAsync(model.Id);
 
-            if (user == null) return new ResponseModel(false, "Không tìm thấy tài khoản");
+            if (user == null) return new ResponseModel(false, "Người dùng không tồn tại");
 
             _mapper.Map(model, user);
 
@@ -180,6 +180,23 @@ namespace BookSale.Managerment.Application.Service
             }
 
             return new ResponseModel(false, "Cập nhật tài khoản không thành công");
+        }
+        public async Task<ResponseModel> DeleteUser(string id)
+        {
+            if(string.IsNullOrEmpty(id))
+            {
+                return new ResponseModel(false, "Id không được để trống");
+            }
+
+            var user = await _userManager.FindByIdAsync(id);
+
+            if (user == null) return new ResponseModel(false, "Người dùng không tồn tại");
+
+            user.IsActive = false;
+
+            await _userManager.UpdateAsync(user);
+
+            return new ResponseModel(ActionType.Delete, true, "Xóa tài khoản thành công");
         }
     }
 }

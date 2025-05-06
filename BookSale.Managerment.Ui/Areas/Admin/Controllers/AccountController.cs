@@ -83,5 +83,12 @@ namespace BookSale.Managerment.Ui.Areas.Admin.Controllers
             // Trả về view với model và thông báo lỗi
             return View(model);
         }
+        [HttpPost]
+        public async Task<IActionResult> Delete(string id)
+        {
+            var result = await _userService.DeleteUser(id);
+
+            return Json(result);
+        }
     }
 }

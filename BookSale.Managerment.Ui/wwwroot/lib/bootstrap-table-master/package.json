@@ -124,5 +124,8 @@
       "tools/**",
       "DONATORS.md"
     ]
+  },
+  "dependencies": {
+    "bootstrap-table": "file:"
   }
 }
