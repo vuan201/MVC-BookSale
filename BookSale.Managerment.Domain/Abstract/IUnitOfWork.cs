@@ -9,6 +9,7 @@ namespace BookSale.Managerment.Domain.Abstract
         IBookRepository BookRepository { get; }
         IBookTagRepository BookTagRepository { get; }
         ITagsRepository TagsRepository { get; }
+        ICloudStorageRepository CloudStorageRepository { get; }
         Task SaveChangesAsync();
     }
 }

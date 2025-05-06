@@ -2,25 +2,35 @@ using AutoMapper;
 using BookSale.Managerment.Application.Abstracts;
 using BookSale.Managerment.Application.DTOs;
 using BookSale.Managerment.Domain.constants;
+using BookSale.Managerment.Domain.Enums;
 using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
 using dotenv.net;
 using Microsoft.AspNetCore.Http;
-
 namespace BookSale.Managerment.Application.Service
 {
     public class CloudinaryService : IStorageService
     {
         private readonly Cloudinary _cloudinary;
         private readonly IMapper _mapper;
-        public CloudinaryService(IMapper mapper)
+        private readonly ICloudStorageService _cloudStorageService;
+        public CloudinaryService(IMapper mapper, ICloudStorageService cloudStorageService)
         {
+            _cloudStorageService = cloudStorageService;
+            var storage = _cloudStorageService.GetStorage(StorageType.Cloudinary);
+
             DotEnv.Load(new DotEnvOptions(envFilePaths: new[] { Setup.EnvPath }));
 
-            this._cloudinary = new Cloudinary(Environment.GetEnvironmentVariable("CLOUDINARY_URL"))
-            {
-                Api = { Secure = true } // Bắt buộc dùng HTTPS
-            };
+            this._cloudinary = storage == null
+                              ? new Cloudinary(Environment.GetEnvironmentVariable("CLOUDINARY_URL"))
+                              {
+                                  Api = { Secure = true } // Bắt buộc dùng HTTPS
+                              }
+                              : new Cloudinary(new Account(storage.Account, storage.Key, storage.Secret))
+                              {
+                                  Api = { Secure = true } // Bắt buộc dùng HTTPS
+                              };
+
             this._mapper = mapper;
         }
 
@@ -33,7 +43,7 @@ namespace BookSale.Managerment.Application.Service
 
             await using var stream = file.OpenReadStream();
 
-            var uploadParams = new ImageUploadParams()
+           var uploadParams = new ImageUploadParams()
             {
                 File = new FileDescription(fileKey, stream),
                 PublicId = fileKey,

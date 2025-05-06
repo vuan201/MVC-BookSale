@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using BookSale.Managerment.Application.Abstracts;
 using BookSale.Managerment.Application.DTOs;
+using BookSale.Managerment.Domain.constants;
+using BookSale.Managerment.Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
@@ -12,11 +14,13 @@ namespace BookSale.Managerment.Ui.Areas.Admin.Controllers
     public class AccountController : Controller
     {
         private readonly IUserService _userService;
+        private readonly IStorageService _storageService;
         private readonly IMapper _mapper;
-        public AccountController(IUserService userService, IMapper mapper)
+        public AccountController(IUserService userService, IMapper mapper, IStorageServiceFactory storageServiceFactory)
         {
             _userService = userService;
             _mapper = mapper;
+            _storageService = storageServiceFactory.GetStorageService(StorageType.Cloudinary);
         }
 
         public IActionResult AccountManagerment()
@@ -46,9 +50,13 @@ namespace BookSale.Managerment.Ui.Areas.Admin.Controllers
         }
         public async Task<IActionResult> Save(string? id)
         {
-            var user = !string.IsNullOrEmpty(id) ? await _userService.GetUserById(id) : new UserDto();
+            if(!string.IsNullOrEmpty(id)) {
+                var user = await _userService.GetUserById(id);
+                ViewBag.AvatarEditUrl = _storageService.GetUrlImageByPublicId($"{CloudinaryFolder.Avatars}/{id}");
+                return View(user);
+            }
 
-            return View(user);
+            return View(new UserDto());
         }
         [HttpPost]
         public async Task<IActionResult> Save(UserDto model)

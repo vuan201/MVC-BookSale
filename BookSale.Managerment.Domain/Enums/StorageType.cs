@@ -5,6 +5,6 @@ namespace BookSale.Managerment.Domain.Enums
     Cloudinary = 1,
     FirebaseStorage = 2, // Google Cloud
     Azure = 3, // Microsoft Azure Blob Storage
-    S3, // Amazon Web Services (AWS) Simple Storage Service (S3)
+    S3 = 4, // Amazon Web Services (AWS) Simple Storage Service (S3)
   }
 }

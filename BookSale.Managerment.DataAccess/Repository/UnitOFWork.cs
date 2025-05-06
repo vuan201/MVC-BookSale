@@ -13,6 +13,8 @@ namespace BookSale.Managerment.DataAccess.Repository
         private IBookRepository? _bookRepository;
         private IBookTagRepository? _bookTagRepository;
         private ITagsRepository? _tagsRepository;
+        private ICloudStorageRepository? _cloudStorageRepository;
+
         public UnitOFWork(ApplicationDbContext context)
         {
             _context = context;
@@ -23,6 +25,7 @@ namespace BookSale.Managerment.DataAccess.Repository
         public IBookRepository BookRepository => _bookRepository ??= new BookRepository(_context);
         public IBookTagRepository BookTagRepository => _bookTagRepository ??= new BookTagRepository(_context);
         public ITagsRepository TagsRepository => _tagsRepository ??= new TagsRepository(_context);
+        public ICloudStorageRepository CloudStorageRepository => _cloudStorageRepository ??= new CloudStorageRepository(_context);
         public async Task SaveChangesAsync()
         {
             await _context.SaveChangesAsync();

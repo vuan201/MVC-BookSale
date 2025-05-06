@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using BookSale.Managerment.Domain.Abstract;
 namespace BookSale.Managerment.DataAccess.Repository
 {
-    internal class BookTagRepository : BaseRepository<BookTags>, IBookTagRepository
+    public class BookTagRepository : BaseRepository<BookTags>, IBookTagRepository
     {
         public BookTagRepository(ApplicationDbContext context) : base(context)
         {

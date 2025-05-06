@@ -31,7 +31,11 @@ namespace BookSale.Managerment.DataAccess.Repository
             }
             return await _context.Set<TEntity>().Where(expression).ToListAsync();
         }
-        public async Task<TEntity?> Get(Expression<Func<TEntity, bool>> expression)
+        public TEntity? Get(Expression<Func<TEntity, bool>> expression)
+        {
+            return _context.Set<TEntity>().FirstOrDefault(expression);
+        }
+        public async Task<TEntity?> GetAsync(Expression<Func<TEntity, bool>> expression)
         {
             return await _context.Set<TEntity>().FirstOrDefaultAsync(expression);
         }

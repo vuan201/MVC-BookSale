@@ -93,6 +93,7 @@ namespace BookSale.Managerment.DataAccess.Configuration
             service.AddScoped<IAuthenticationService, AuthenticationService>();
             service.AddScoped<IUserService, UserService>();
             service.AddScoped<IRoleService, RoleService>();
+            service.AddScoped<ICloudStorageService, CloudStorageService>();
 
             // ===================================================
             // Đăng ký các dịch vụ Storage
