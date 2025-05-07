@@ -9,6 +9,7 @@ using DotNetEnv;
 using dotenv.net;
 using BookSale.Managerment.Domain.constants;
 using BookSale.Managerment.Domain;
+using CloudinaryDotNet.Actions;
 namespace BookSale.Managerment.DataAccess
 {
     public static class ConfigurationService
@@ -37,11 +38,12 @@ namespace BookSale.Managerment.DataAccess
         }
         public static async Task SeedData(this WebApplication webApplication, Microsoft.Extensions.Configuration.ConfigurationManager configuration)
         {
+            var baseRoleList = Roles.GetRoles();
+
             // Load file .env
             DotEnv.Load(new DotEnvOptions(envFilePaths: new[] { Setup.EnvPath }));
 
             // Lấy các biến môi trường từ file .env
-            string baseRole = Environment.GetEnvironmentVariable("ROLE") ?? Roles.SupperAdmin;
             string userName = Environment.GetEnvironmentVariable("SUPPER_ADMIN_USERNAME") ?? Setup.UserName;
             string password = Environment.GetEnvironmentVariable("SUPPER_ADMIN_PASSWORD") ?? Setup.password;
             string fullName = Environment.GetEnvironmentVariable("SUPPER_ADMIN_FULLNAME") ?? Setup.FullName;
@@ -53,10 +55,16 @@ namespace BookSale.Managerment.DataAccess
                 var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
                 try
                 {
-                    // Kiểm tra xem role có tồn tại hay không
-                    if (!await roleManager.RoleExistsAsync(baseRole))
+                    // Thêm tất cả các role trong code vào db nếu chưa có (Tự động hóa đồng bộ khi chỉ cần thêm role vào code)
+                    if(baseRoleList != null)
                     {
-                        await roleManager.CreateAsync(new IdentityRole(baseRole));
+                        foreach( var role in baseRoleList)
+                        {
+                            if (!await roleManager.RoleExistsAsync(role))
+                            {
+                                await roleManager.CreateAsync(new IdentityRole(role));
+                            }
+                        }
                     }
 
                     // Kiểm tra xem người dùng có tồn tại hay không, nếu không thì tạo mới
@@ -82,7 +90,7 @@ namespace BookSale.Managerment.DataAccess
                         if (identityUser.Succeeded)
                         {
                             // Thêm role cho người dùng mặc định
-                            await userManager.AddToRoleAsync(baseUser, baseRole);
+                            await userManager.AddToRoleAsync(baseUser, Roles.SupperAdmin);
                         }
 
                         // Xác nhận email của người dùng mặc định
