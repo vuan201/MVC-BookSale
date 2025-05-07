@@ -5,9 +5,13 @@ using BookSale.Managerment.Ui.Areas.Admin.Controllers;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Đăng ký db
+// Đăng ký và config Database
 builder.Services.RegisterDb(builder.Configuration);
+
+// Thêm Dependency Injection
 builder.Services.AddDependencyInjection();
+
+// Đăng ký AutoMapper
 builder.Services.AddAutoMapperConfiguration();
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();

@@ -139,9 +139,11 @@
     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
     <script src="~/js/changeavatarevent.js"></script>
     <script>
+
         const fileImageInput = document.getElementById('file-input');
         const customButton = document.querySelector('.custom-file-upload');
         const fileNameSpan = document.getElementById('file-name');
+        const avatarImg = document.getElementById("avatar-img");
 
         customButton.addEventListener('click', () => {
             fileImageInput.click();
@@ -149,10 +151,30 @@
 
         fileImageInput.addEventListener('change', () => {
             if (fileImageInput.files.length > 0) {
-                fileNameSpan.textContent = fileImageInput.files[0].name;
+                fileNameSpan.textContent = fileImageInput.files[0].name
             } else {
                 fileNameSpan.textContent = 'Chưa có tệp nào được chọn';
             }
         });
+        $(document).ready(function() {
+            fileImageInput.addEventListener("change", function () {
+                const input = this.files[0];
+
+                if (input) {
+                    avatarImg.classList.remove("no-image");
+                    avatarImg.src = URL.createObjectURL(input);
+                }
+            });
+
+            avatarImg.addEventListener("error", function () {
+                onErrorImage();
+            });
+
+            function onErrorImage() {
+                avatarImg.src = "/image/no_image.jpg";
+                avatarImg.alt = "Default Avatar";
+                avatarImg.classList.add("no-image");
+            }
+        })
     </script>
 }

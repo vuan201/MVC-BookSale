@@ -28,6 +28,7 @@ namespace BookSale.Managerment.DataAccess.Configuration
 
             // Đăng ký DbContext và cấu hình kết nối cơ sở dữ liệu
             service.AddDbContext<ApplicationDbContext>(options => {
+
                 // Sử dụng MySQL với chuỗi kết nối và phiên bản của MySqlServerVersion
                 options.UseMySql(connectionString, serverVersion);
 
@@ -48,11 +49,21 @@ namespace BookSale.Managerment.DataAccess.Configuration
                 options.SignIn.RequireConfirmedAccount = false;
 
                 // Cấu hình chính sách mật khẩu (tùy chọn)
-                options.Password.RequireDigit = true; // Yêu cầu có số
-                options.Password.RequireLowercase = true; // Yêu cầu có chữ thường
-                options.Password.RequireUppercase = true; // Yêu cầu có chữ hoa
-                options.Password.RequireNonAlphanumeric = true; // Yêu cầu có ký tự đặc biệt
-                options.Password.RequiredLength = 6; // Độ dài tối thiểu
+
+                // Yêu cầu có số
+                options.Password.RequireDigit = true;
+
+                // Yêu cầu có chữ thường
+                options.Password.RequireLowercase = true;
+
+                // Yêu cầu có chữ hoa
+                options.Password.RequireUppercase = true;
+
+                // Yêu cầu có ký tự đặc biệt
+                options.Password.RequireNonAlphanumeric = true;
+
+                // Độ dài tối thiểu
+                options.Password.RequiredLength = 6; 
             })
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddDefaultTokenProviders();
@@ -60,20 +71,36 @@ namespace BookSale.Managerment.DataAccess.Configuration
             // Cấu hình các tùy chọn về cookie cho xác thực
             service.ConfigureApplicationCookie(options =>
             {
-                options.SlidingExpiration = true; // Cho phép kéo dài thời gian sống của cookie khi người dùng tiếp tục truy cập
-                options.ExpireTimeSpan = TimeSpan.FromDays(3); // Thời gian hết hạn cookie là 30 ngày
+                // Cho phép kéo dài thời gian sống của cookie khi người dùng tiếp tục truy cập
+                options.SlidingExpiration = true;
+
+                // Thời gian hết hạn cookie là 30 ngày
+                options.ExpireTimeSpan = TimeSpan.FromDays(3); 
+
+                // Tên Cookie
                 options.Cookie.Name = "BookSaleManagermentCookie";
-                options.LoginPath = "/Admin/Authentication/Login"; // Đường dẫn đến trang đăng nhập
-                options.SlidingExpiration = true; // Cho phép kéo dài thời gian sống của cookie khi người dùng tiếp tục truy cập
-                // options.AccessDeniedPath = "/"; // Đường dẫn đến trang không được phép truy cập
+
+                // Đường dẫn đến trang đăng nhập
+                options.LoginPath = "/Admin/Authentication/Login";
+
+                // Cho phép kéo dài thời gian sống của cookie khi người dùng tiếp tục truy cập
+                options.SlidingExpiration = true;
+
+                // Đường dẫn đến trang không được phép truy cập
+                // options.AccessDeniedPath = "/"; 
             });
 
             // Cấu hình các tùy chọn khác về xác thực và bảo mật
             service.Configure<IdentityOptions>(options =>
             {
-                options.Lockout.AllowedForNewUsers = true; // Cho phép khóa tài khoản cho người dùng mới tạo
-                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromSeconds(30); // Thời gian khóa mặc định là 30 giây
-                options.Lockout.MaxFailedAccessAttempts = 5; // Số lần thử sai tối đa trước khi khóa tài khoản
+                // Cho phép khóa tài khoản cho người dùng mới tạo
+                options.Lockout.AllowedForNewUsers = true;
+
+                // Thời gian khóa mặc định là 30 giây
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromSeconds(30);
+
+                // Số lần thử sai tối đa trước khi khóa tài khoản
+                options.Lockout.MaxFailedAccessAttempts = 5; 
             
                 // Các ký tự hợp lệ trong tên người dùng
                 options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
@@ -82,29 +109,29 @@ namespace BookSale.Managerment.DataAccess.Configuration
                 options.User.RequireUniqueEmail = true;
             });
         }
-        // Đăng ký các dịch vụ phụ thuộc vào ứng dụng
+        // Thêm Dependency Injection 
         public static void AddDependencyInjection(this IServiceCollection service)
         {
-            // Đăng ký các dịch vụ Identity
+            // Inject các dịch vụ Identity
             service.AddScoped<PasswordHasher<ApplicationUser>>();
             service.AddScoped<IUnitOfWork, UnitOFWork>();
 
-            // Đăng ký các dịch vụ khác
+            // Inject các dịch vụ khác
             service.AddScoped<IAuthenticationService, AuthenticationService>();
             service.AddScoped<IUserService, UserService>();
             service.AddScoped<IRoleService, RoleService>();
             service.AddScoped<ICloudStorageService, CloudStorageService>();
 
             // ===================================================
-            // Đăng ký các dịch vụ Storage
+            // Inject các dịch vụ Storage
 
-            // Đăng ký Storage Factory
+            // Inject Storage Factory
             service.AddScoped<IStorageServiceFactory, StorageServiceFactory>();
             
-            // Đăng ký dịch vụ Cloudinary
+            // Inject dịch vụ Cloudinary
             service.AddScoped<CloudinaryService>();
 
-            // Đăng ký AutoMapper
+            // Inject AutoMapper
             service.AddAutoMapper(typeof(MappingProfile));
         }
 
