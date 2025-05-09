@@ -45,6 +45,9 @@
 
 @section Scripts {
     <script>
+
+        var table = $("#account-table")
+
         function customParams(params) {
             return params;
         }
@@ -76,10 +79,12 @@
                         method:"POST",
                         dataType: "json",
                         success: function(respone) {
-                            console.log(respone)
+                            showToaster("Success", `${respone.message}`)
+                            $(table).bootstrapTable("refresh");
                         },
                         error: function(xhr, status, error) {
-
+                            var Response = JSON.parse(xhr.responseText)
+                            showToaster("Error", `${status} ${Response.message}`)
                         }
                     })
                     }

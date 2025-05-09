@@ -95,8 +95,11 @@ namespace BookSale.Managerment.Ui.Areas.Admin.Controllers
         public async Task<IActionResult> Delete(string id)
         {
             var result = await _userService.DeleteUser(id);
+            if(result.Status)
+                return Json(result);
 
-            return Json(result);
+            // Error
+            return NotFound(result);
         }
     }
 }
