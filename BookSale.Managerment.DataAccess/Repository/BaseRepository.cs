@@ -1,4 +1,5 @@
 ﻿using BookSale.Managerment.DataAccess.DataAccess;
+using BookSale.Managerment.Domain.Abstract;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -9,35 +10,16 @@ using System.Threading.Tasks;
 
 namespace BookSale.Managerment.DataAccess.Repository
 {
-    public class BaseRepository<TEntity> where TEntity : class
+    public class BaseRepository<TEntity, TContext> : BaseRepositoryReadonly<TEntity, TContext>, IBaseRepository<TEntity>
+        where TEntity : class
+        where TContext : DbContext
     {
-        protected readonly ApplicationDbContext _context;
-        public BaseRepository(ApplicationDbContext context)
-        {
-            _context = context;
-        }
+        public BaseRepository(TContext context) : base(context) { }
 
         // Add
         public async Task CreateAsync(TEntity entity)
         {
             await _context.Set<TEntity>().AddAsync(entity);
-        }
-        // Get
-        public async Task<IEnumerable<TEntity>> GetAll(Expression<Func<TEntity, bool>>? expression = null)
-        {
-            if(expression is null)
-            {
-                return await _context.Set<TEntity>().ToListAsync();
-            }
-            return await _context.Set<TEntity>().Where(expression).ToListAsync();
-        }
-        public TEntity? Get(Expression<Func<TEntity, bool>> expression)
-        {
-            return _context.Set<TEntity>().FirstOrDefault(expression);
-        }
-        public async Task<TEntity?> GetAsync(Expression<Func<TEntity, bool>> expression)
-        {
-            return await _context.Set<TEntity>().FirstOrDefaultAsync(expression);
         }
 
         // Update
@@ -54,7 +36,7 @@ namespace BookSale.Managerment.DataAccess.Repository
         }
 
         // Save
-        public async Task Commit()
+        public async Task SaveChangesAsync()
         {
             await _context.SaveChangesAsync();
         }

@@ -2,8 +2,7 @@
 
 namespace BookSale.Managerment.Domain.Abstract
 {
-    public interface IBookTagRepository
+    public interface IBookTagRepository : IBaseRepository<BookTags>
     {
-        Task<IEnumerable<BookTags>> GetAllBookTags();
     }
 }

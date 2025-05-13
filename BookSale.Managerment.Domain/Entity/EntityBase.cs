@@ -16,5 +16,11 @@ namespace BookSale.Managerment.Domain.Entity
         public bool IsActive { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime UpdatedDate { get; set; }
+        public EntityBase()
+        {
+            this.IsActive = true;
+            this.CreatedDate = DateTime.Now;
+            this.UpdatedDate = DateTime.Now;
+        }
     }
 }

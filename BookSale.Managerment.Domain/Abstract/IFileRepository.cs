@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BookSale.Managerment.Domain.Abstract
 {
-    public interface IGenreRepository : IBaseRepository<Genres>
+    public interface IFileRepository : IBaseRepository<Files>
     {
     }
 }

@@ -24,7 +24,7 @@ namespace BookSale.Managerment.Application.Service
 
         public async Task<IEnumerable<GenreDTO>> GetAllGenres()
         {
-            var genres = await _genreRepository.GetAllGenres();
+            var genres = await _genreRepository.GetAll();
             return _mapper.Map<IEnumerable<GenreDTO>>(genres);
         }
     }

@@ -2,8 +2,7 @@
 
 namespace BookSale.Managerment.Domain.Abstract
 {
-    public interface IBookImageRepository
+    public interface IBookImageRepository : IBaseRepository<BookImages>
     {
-        Task<IEnumerable<BookImages>> GetAllBookImages();
     }
 }

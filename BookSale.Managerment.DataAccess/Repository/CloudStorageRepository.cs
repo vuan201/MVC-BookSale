@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace BookSale.Managerment.DataAccess.Repository
 {
-    public class CloudStorageRepository : BaseRepository<CloudStorages>, ICloudStorageRepository
+    public class CloudStorageRepository : BaseRepository<CloudStorages, ApplicationDbContext>, ICloudStorageRepository
     {
         public CloudStorageRepository(ApplicationDbContext context) : base(context) { }
         public CloudStorages? GetCloudStorageByType(StorageType type)

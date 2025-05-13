@@ -9,15 +9,10 @@ using System.Threading.Tasks;
 
 namespace BookSale.Managerment.DataAccess.Repository
 {
-    public class GenreRepository : BaseRepository<Genres>, IGenreRepository
+    public class GenreRepository : BaseRepository<Genres, ApplicationDbContext>, IGenreRepository
     {
         public GenreRepository(ApplicationDbContext context) : base(context)
         {
-        }
-
-        public async Task<IEnumerable<Genres>> GetAllGenres()
-        {
-            return await base.GetAll();
         }
     }
 }
