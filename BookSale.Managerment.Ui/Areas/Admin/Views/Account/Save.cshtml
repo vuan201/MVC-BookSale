@@ -89,13 +89,13 @@
                     <h4 class="card-title">Ảnh đại diện</h4>
                     <div class="form-image">
                         <div class="image-big-avatar">
-                            @if (string.IsNullOrEmpty(Model.Id))
+                            @if (string.IsNullOrEmpty(Model.AvatarUrl))
                             {
                                 <img id="avatar-img" class="avatar no-image" alt="avatar.jpg" src="~/image/no_image.jpg" />
                             }
                             else
                             {
-                                <img id="avatar-img" class="avatar" src="@ViewBag.AvatarEditUrl" alt="">
+                                <img id="avatar-img" class="avatar" src="@Model.AvatarUrl" alt="">
                             }
                         </div>
                         <div class="input-file-image">

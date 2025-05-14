@@ -3,6 +3,7 @@ using BookSale.Managerment.Application.Abstracts;
 using BookSale.Managerment.Application.DTOs;
 using BookSale.Managerment.Domain.constants;
 using BookSale.Managerment.Domain.Enums;
+using BookSale.Managerment.Ui.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
@@ -40,9 +41,13 @@ namespace BookSale.Managerment.Ui.Areas.Admin.Controllers
                 return BadRequest(new { message = "Params khôn hợp lệ!" });
             }
 
-            var user = _userService.GetUsers(filter);
-
-            return Json(user);
+            var users = _userService.GetUsers(filter);
+            var viewModel = new TableViewModel<UserDto>
+            {
+                total = users.Data != null ? users.Data.Count() : 0,
+                Rows = users.Data,
+            };
+            return Json(viewModel);
         }
         public IActionResult RoleManagerment()
         {
@@ -52,7 +57,6 @@ namespace BookSale.Managerment.Ui.Areas.Admin.Controllers
         {
             if(!string.IsNullOrEmpty(id)) {
                 var user = await _userService.GetUserById(id);
-                ViewBag.AvatarEditUrl = _storageService.GetUrlImageByPublicId($"{CloudinaryFolder.Avatars}/{id}");
                 return View(user);
             }
 

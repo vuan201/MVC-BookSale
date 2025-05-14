@@ -23,18 +23,16 @@ namespace BookSale.Managerment.Application.DTOs
     }
     public class ResponseModel<T> : ResponseModel where T : class
     {
-        public int Total { get; set; }
-        public T? Rows { get; set; }
         public T? Data { get; set; }
-
-        public ResponseModel(bool status, string message, int Total, T? rows = null) : base(status, message)
+        public ResponseModel(bool status, string message) : base(status, message) {}
+        public ResponseModel(bool status, string message, T data) : base(status, message)
         {
-            this.Total = Total;
-            this.Rows = rows;
+            Data = data;
         }
-        public ResponseModel(T data) : base(true, "Success")
+
+        public ResponseModel(ActionType actionType, bool status, string message, T data) : base(actionType, status, message)
         {
-            this.Data = data;
+            Data = data;
         }
     }
 }

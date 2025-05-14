@@ -8,7 +8,7 @@ namespace BookSale.Managerment.Application.DTOs
     public string? Id { get; set; }
 
     [Required(ErrorMessage = "Vui lòng nhập role")]
-    public string RoleName { get; set; }
+    public string? RoleName { get; set; }
 
     [Required(ErrorMessage = "Vui lòng nhập tên đăng nhập")]
     [MinLength(6, ErrorMessage = "Tên đăng nhập phải có tối thiểu 6 ký tự")]
@@ -36,5 +36,6 @@ namespace BookSale.Managerment.Application.DTOs
 
     public IFormFile? Avata { get; set; }
     public bool IsActive {get;set;}
+    public string? AvatarUrl { get; set; }
   }
 }
