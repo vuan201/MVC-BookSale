@@ -19,7 +19,10 @@ namespace BookSale.Managerment.DataAccess.Repository
         {
             _context = context;
         }
-
+        public IQueryable<TEntity> AsQueryable()
+        {
+            return _context.Set<TEntity>().AsQueryable();
+        }
         public async Task<IEnumerable<TEntity>> GetAll(Expression<Func<TEntity, bool>>? expression = null)
         {
             if (expression is null)
