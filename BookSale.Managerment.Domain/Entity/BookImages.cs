@@ -3,10 +3,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BookSale.Managerment.Domain.Entity
 {
-    public class BookImages
+    public class BookImages : EntityBase
     {
-        [Key]
-        public int Id { get; set; }
         public int BookId { get; set; }
 
         [ForeignKey(nameof(BookId))]

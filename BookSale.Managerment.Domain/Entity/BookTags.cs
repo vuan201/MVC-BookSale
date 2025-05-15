@@ -8,10 +8,8 @@ using System.Threading.Tasks;
 
 namespace BookSale.Managerment.Domain.Entity
 {
-    public class BookTags 
+    public class BookTags : EntityBase
     {
-        [Key]
-        public int Id { get; set; }
         public int BookId { get; set; }
         public int TagId { get; set; }
 

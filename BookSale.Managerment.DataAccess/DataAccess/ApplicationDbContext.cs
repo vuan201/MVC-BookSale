@@ -19,5 +19,10 @@ namespace BookSale.Managerment.DataAccess.DataAccess
         public DbSet<Tags> Tags { get; set; }
         public DbSet<CloudStorages> CloudStorages { get; set; }
         public DbSet<Files> Files { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+        }
     }
 }

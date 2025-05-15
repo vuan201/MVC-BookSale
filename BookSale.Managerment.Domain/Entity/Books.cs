@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BookSale.Managerment.Domain.Entity
 {
-    public class Books : EntityBase
+    public class Books : EntityAdvancedManagement
     {
         [StringLength(250)]
         public string Name { get; set; }

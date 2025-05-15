@@ -3,7 +3,7 @@ using BookSale.Managerment.Domain.Enums;
 
 namespace BookSale.Managerment.Domain.Entity
 {
-    public class CloudStorages : EntityBase
+    public class CloudStorages : EntityAdvancedManagement
     {
         [StringLength(50)]
         public string Name { get; set; }
