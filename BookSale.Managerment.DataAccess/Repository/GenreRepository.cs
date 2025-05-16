@@ -14,5 +14,7 @@ namespace BookSale.Managerment.DataAccess.Repository
         public GenreRepository(ApplicationDbContext context) : base(context)
         {
         }
+
+        public async Task<Genres?> GetByIdAsync(int id) => await GetAsync(i => i.Id == id);
     }
 }

@@ -23,7 +23,7 @@ namespace BookSale.Managerment.DataAccess.Repository
         {
             return _context.Set<TEntity>().AsQueryable();
         }
-        public async Task<IEnumerable<TEntity>> GetAll(Expression<Func<TEntity, bool>>? expression = null)
+        public async Task<IEnumerable<TEntity>> GetListAsync(Expression<Func<TEntity, bool>>? expression = null)
         {
             if (expression is null)
             {

@@ -31,21 +31,16 @@ namespace BookSale.Managerment.Ui.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult GetListAccounts(RequestFilterModel filter)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             if (filter == null || filter.Limit <= 0 || filter.Offset < 0)
             {
                 return BadRequest(new { message = "Params khôn hợp lệ!" });
             }
 
-            var users = _userService.GetUsers(filter);
+            var result = _userService.GetUsers(filter);
             var viewModel = new TableViewModel<UserDto>
             {
-                total = users.Data != null ? users.Data.Count() : 0,
-                Rows = users.Data,
+                total = result.Total,
+                Rows = result.Data,
             };
             return Json(viewModel);
         }
@@ -81,7 +76,9 @@ namespace BookSale.Managerment.Ui.Areas.Admin.Controllers
             }
 
             // Gọi service để lưu dữ liệu
-            var result = await _userService.Save(model);
+            var result = string.IsNullOrEmpty(model.Id) 
+                       ? await _userService.Create(model) 
+                       : await _userService.Update(model);
 
             if (result.Status)
             {

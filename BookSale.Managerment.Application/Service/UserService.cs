@@ -33,7 +33,7 @@ namespace BookSale.Managerment.Application.Service
             if (!string.IsNullOrEmpty(username))
             {
                 var user = await _userManager.FindByNameAsync(username);
-                if (user != null)
+                if (user is not null)
                     return _mapper.Map<UserDto>(user);
             }
             return null;
@@ -43,11 +43,11 @@ namespace BookSale.Managerment.Application.Service
             if (!string.IsNullOrEmpty(userId))
             {
                 var user = await _userManager.FindByIdAsync(userId);
-                if (user != null)
+                if (user is not null)
                 {
                     var userDto = _mapper.Map<UserDto>(user);
 
-                    if(user.Avatar != null)
+                    if(user.Avatar is not null)
                     {
                         userDto.AvatarUrl = _cloundinaryService.GetUrlImageByPublicId(user.Avatar.Key);
                     }
@@ -75,49 +75,20 @@ namespace BookSale.Managerment.Application.Service
 
             var users = query.Where(i => i.IsActive).Skip(filter.Offset).Take(filter.Limit).ToList();
 
-            return new ResponseModel<List<UserDto>>(true, "Success", _mapper.Map<List<UserDto>>(users));
-        }
-        public async Task<ResponseModel> Save(UserDto model)
-        {
-            var actionType = string.IsNullOrEmpty(model.Id) ? ActionType.Insert : ActionType.Update;
-
-            // Tạo tài khoản mới
-            if (actionType == ActionType.Insert)
-            {
-                var result = await Create(model);
-
-                if (result.Status)
-                {
-                    return new ResponseModel(actionType, true, result.Message);
-                }
-
-                return new ResponseModel(actionType, false, $"{actionType.ToString()} : {result.Message}");
-            }
-            else
-            {
-                var result = await Update(model);
-
-                if (result.Status)
-                {
-                    return new ResponseModel(actionType, true, result.Message);
-                }
-
-                return new ResponseModel(actionType, false, $"{actionType.ToString()} : {result.Message}");
-            }
-
+            return new ResponseModel<List<UserDto>>(true, ResponseMessage.GetDataSuccess, total, _mapper.Map<List<UserDto>>(users));
         }
         public async Task<ResponseModel> Create(UserDto model)
         {
             // Kiểm tra trùng tên đăng nhập
-            if (await _userManager.FindByNameAsync(model.UserName) != null)
+            if (await _userManager.FindByNameAsync(model.UserName) is not null)
                 return new ResponseModel(false, "Tên đăng nhập đã tồn tại");
 
             // Kiểm tra trùng email
-            if (await _userManager.FindByEmailAsync(model.Email) != null)
-                return new ResponseModel(false, "Email đã tồn tại");
+            if (await _userManager.FindByEmailAsync(model.Email) is not null)
+                return new ResponseModel(false, ResponseMessage.GetInvalidMessage("Email"));
 
             // Kiểm tra mật khẩu
-            if (model.Password == null) return new ResponseModel(false, "Mật khẩu không hợp lệ");
+            if (model.Password == null) return new ResponseModel(false, ResponseMessage.GetInvalidMessage("Mật khẩu"));
 
             // Tạo tài khoản mới
             var user = new ApplicationUser();
@@ -136,7 +107,7 @@ namespace BookSale.Managerment.Application.Service
             await _userManager.AddToRoleAsync(user, model.RoleName);
 
             // Upload ảnh lên cloudinary và lưu thông tin ảnh vào database
-            if (model.Avata != null)
+            if (model.Avata is not null)
             {
                 DateTime now = DateTime.Now;
                 var fileName = $"avatar_user_{user.FullName}_{now.Year}_{now.Month}_{now.Day}_{now.Hour}_{now.Minute}_{now.Second}";
@@ -144,14 +115,14 @@ namespace BookSale.Managerment.Application.Service
                 // Upload ảnh lên cloud storage
                 var uploadResult = await _cloundinaryService.UploadImage(model.Avata, $"{CloudinaryFolder.Avatars}/{fileName}");
 
-                if (uploadResult.Status && uploadResult.Data != null && uploadResult.Data.PublicId != null)
+                if (uploadResult.Status && uploadResult.Data is not null && uploadResult.Data.PublicId is not null)
                 {
                     var fileDto = new FIleDTO(StorageType.Cloudinary, fileName, uploadResult.Data.PublicId);
 
                     // Lưu thông tin file vào database
                     var fileResult = await _fileService.SaveFile(fileDto);
 
-                    if(fileResult.Status && fileResult.Data != null)
+                    if(fileResult.Status && fileResult.Data is not null)
                     {
                         // Cập nhật thông tin ảnh vào user
                         user.AvatarId = fileResult.Data.Id;
@@ -160,15 +131,15 @@ namespace BookSale.Managerment.Application.Service
                     }
                 }
             }
-            return new ResponseModel(true, "Tạo tài khoản thành công");
+            return new ResponseModel(true, ResponseMessage.CreateSuccess);
         }
         public async Task<ResponseModel> Update(UserDto model)
         {
-            if (model.Id == null) return new ResponseModel(false, "Không tìm thấy id");
+            if (model.Id == null) return new ResponseModel(false, ResponseMessage.InvalidValue);
 
             var user = await _userManager.FindByIdAsync(model.Id);
 
-            if (user == null) return new ResponseModel(false, "Người dùng không tồn tại");
+            if (user == null) return new ResponseModel(false, ResponseMessage.DoesNotExist);
 
             _mapper.Map(model, user);
 
@@ -180,16 +151,16 @@ namespace BookSale.Managerment.Application.Service
                 // Upload ảnh lên cloud storage
                 var uploadResult = await _cloundinaryService.UploadImage(model.Avata, $"{CloudinaryFolder.Avatars}/{fileName}");
 
-                if (uploadResult.Status && uploadResult.Data != null && uploadResult.Data.PublicId != null)
+                if (uploadResult.Status && uploadResult.Data is not null && uploadResult.Data.PublicId is not null)
                 {
                     var newFile = new FIleDTO(StorageType.Cloudinary, fileName, uploadResult.Data.PublicId);
 
-                    if (user.AvatarId != null) newFile.Id = user.AvatarId.Value;
+                    if (user.AvatarId is not null) newFile.Id = user.AvatarId.Value;
 
                     // Lưu thông tin file vào database
                     var fileResult = await _fileService.SaveFile(newFile);
 
-                    if (fileResult.Status && fileResult.Data != null)
+                    if (fileResult.Status && fileResult.Data is not null)
                     {
                         // Cập nhật thông tin ảnh vào user
                         user.AvatarId = fileResult.Data.Id;
@@ -206,7 +177,7 @@ namespace BookSale.Managerment.Application.Service
                 {
                     var role = (await _userManager.GetRolesAsync(user)).FirstOrDefault();
 
-                    if (role != null)
+                    if (role is not null)
                     {
                         var removeRoleResult = await _userManager.RemoveFromRoleAsync(user, role);
 
@@ -220,26 +191,26 @@ namespace BookSale.Managerment.Application.Service
                         await _userManager.AddToRoleAsync(user, model.RoleName);
                     }
                 }
-                return new ResponseModel(true, "Cập nhật tài khoản thành công");
+                return new ResponseModel(true, ResponseMessage.UpdateSuccess);
             }
-            return new ResponseModel(false, "Cập nhật tài khoản không thành công");
+            return new ResponseModel(false, ResponseMessage.UpdateFail);
         }
         public async Task<ResponseModel> DeleteUser(string id)
         {
             if(string.IsNullOrEmpty(id))
             {
-                return new ResponseModel(false, "Id không được để trống");
+                return new ResponseModel(false, ResponseMessage.InvalidValue);
             }
 
             var user = await _userManager.FindByIdAsync(id);
 
-            if (user == null) return new ResponseModel(false, "Người dùng không tồn tại");
+            if (user == null) return new ResponseModel(false, ResponseMessage.DoesNotExist);
 
             user.IsActive = false;
 
             await _userManager.UpdateAsync(user);
 
-            return new ResponseModel(ActionType.Delete, true, "Xóa tài khoản thành công");
+            return new ResponseModel(true, ResponseMessage.DeleteSuccess);
         }
     }
 }

@@ -4,6 +4,9 @@ namespace BookSale.Managerment.Application.Abstracts
 {
     public interface IGenreService
     {
-        Task<IEnumerable<GenreDTO>> GetAllGenres();
+        Task<ResponseModel<GenreDTO>> Create(GenreDTO genre);
+        Task<ResponseModel<GenreDTO>> Delete(int id);
+        Task<ResponseModel<IEnumerable<GenreDTO>>> GetGenreList(RequestFilterModel filter);
+        Task<ResponseModel<GenreDTO>> Update(GenreDTO genre);
     }
 }

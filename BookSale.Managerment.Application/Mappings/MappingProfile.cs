@@ -30,13 +30,13 @@ namespace BookSale.Managerment.Application.Mappings
             // File mappings
             CreateMap<Files, FIleDTO>()
                 .ReverseMap()
-
-                // Phớt lờ Id khi map từ FIleDTO -> Files
                 .ForMember(dest => dest.Id, opt => opt.Ignore()); 
 
 
             // Genre mappings
-            CreateMap<Genres, GenreDTO>().ReverseMap();
+            CreateMap<Genres, GenreDTO>()
+                .ReverseMap()
+                .ForMember(dest => dest.Id, opt => opt.Ignore()); ;
 
             // BookImage mappings
             CreateMap<BookImages, BookImageDTO>().ReverseMap();

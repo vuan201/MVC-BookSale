@@ -11,40 +11,65 @@
     //Active class can be hard coded directly in html file also as required
 
     function addActiveClass(element) {
-      if (current === "") {
-        //for root url
-        if (element.attr('href').indexOf("index.html") !== -1) {
-          element.parents('.nav-item').last().addClass('active');
-          if (element.parents('.sub-menu').length) {
-            element.closest('.collapse').addClass('show');
-            element.addClass('active');
-          }
-        }
-      } else {
-        //for other url
-        if (element.attr('href').indexOf(current) !== -1) {
-          element.parents('.nav-item').last().addClass('active');
-          if (element.parents('.sub-menu').length) {
-            element.closest('.collapse').addClass('show');
-            element.addClass('active');
-          }
-          if (element.parents('.submenu-item').length) {
-            element.addClass('active');
-          }
-        }
+      // Get the href attribute
+      var href = element.attr('href');
+      
+      // Skip processing for dropdown toggles (they have href like "#account-management")
+      if (href && href.startsWith('#')) {
+        return;
+      }
+      
+      // Clean the href by removing leading and trailing slashes
+      href = (href || '').replace(/^\/|\/$/g, '');
+      
+      // Skip empty hrefs
+      if (href === "") return;
+      
+      // For exact match only - compare the full URLs
+      var shouldBeActive = (href === current);
+      
+      // Apply active class if needed
+      if (shouldBeActive) {
+        // Mark this link as active
+        element.addClass('active');
+        
+        // Mark the parent nav-item as active
+        element.parents('.nav-item').last().addClass('active');
       }
     }
 
-    var current = location.pathname.split("/").slice(-1)[0].replace(/^\/|\/$/g, '');
+    //var current = location.pathname.split("/").slice(-1)[0].replace(/^\/|\/$/g, '');
+    var current = location.pathname.replace(/^\/|\/$/g, '');
+
+    // First pass: mark active links based on exact URL match
     $('.nav li a', sidebar).each(function() {
       var $this = $(this);
       addActiveClass($this);
-    })
+    });
 
     $('.horizontal-menu .nav li a').each(function() {
       var $this = $(this);
       addActiveClass($this);
-    })
+    });
+    
+    // Second pass: expand parent menus of active items
+    setTimeout(function() {
+      $('.nav-item.active').each(function() {
+        var $activeItem = $(this);
+        
+        // If this is inside a submenu, expand the parent menu
+        if ($activeItem.parents('.collapse').length) {
+          $activeItem.parents('.collapse').addClass('show');
+          $activeItem.parents('.collapse').prev('a[data-toggle="collapse"]').parents('.nav-item').addClass('active');
+        }
+      });
+      
+      // Ensure submenus with active items are shown
+      $('.sub-menu .nav-item.active').each(function() {
+        $(this).closest('.collapse').addClass('show');
+        $(this).closest('.collapse').prev('a[data-toggle="collapse"]').parents('.nav-item').addClass('active');
+      });
+    }, 100);
 
     //Close other submenu in sidebar on opening any
 

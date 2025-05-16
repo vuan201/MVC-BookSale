@@ -9,5 +9,6 @@ namespace BookSale.Managerment.Domain.Abstract
 {
     public interface IGenreRepository : IBaseRepository<Genres>
     {
+        Task<Genres?> GetByIdAsync(int id);
     }
 }
