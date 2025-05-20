@@ -1,0 +1,30 @@
+﻿@model BookSale.Managerment.Ui.Areas.Admin.View.Components._BootstrapModal;
+
+<div class="modal fade" id="bootstrap-modal" tabindex="-1" role="dialog" aria-labelledby="bootstrap-modal" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <form id="form-modal" class="modal-content" asp-action="@Model.Action" asp-controller="@Model.Controller">
+            <div class="modal-header">
+                <h5 class="modal-title" id="bootstrap-modal-title"></h5>
+                <button type="button" class="close" aria-label="Close" onclick="modalClose()">
+                    <span aria-hidden="true"></span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input id="bootstrap-modal-id" type="hidden" asp-for="@Model.Id" />
+                <div class="form-group">
+                    <label for="bootstrap-modal-name" class="col-form-label">Tên</label>
+                    <input type="text" class="form-control" id="bootstrap-modal-name" asp-for="Name">
+                    <span class="text-danger" asp-validation-for="Name"></span>
+                </div>
+                <div class="form-group">
+                    <label for="bootstrap-modal-description" class="col-form-label">Mô tả:</label>
+                    <textarea class="form-control" id="bootstrap-modal-description" asp-for="Description"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="modalClose()">Đóng</button>
+                <button type="submit" class="btn btn-primary">Lưu</button>
+            </div>
+        </form>
+    </div>
+</div>

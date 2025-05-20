@@ -28,7 +28,6 @@ namespace BookSale.Managerment.Ui.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginForm loginForm)
         {
             /*

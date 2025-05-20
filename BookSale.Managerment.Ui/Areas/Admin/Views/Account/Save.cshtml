@@ -37,18 +37,20 @@
                         <label for="UserName">Tên đăng nhập</label>
                         @if (string.IsNullOrEmpty(Model.Id))
                         {
-                            <input type="text" class="form-control" id="UserName" asp-for="UserName" placeholder="Tên đăng nhập">
+                            <input type="text" class="form-control" id="UserName" asp-for="UserName"
+                                placeholder="Tên đăng nhập">
                         }
                         else
                         {
-                            <input type="text" class="form-control" id="UserName" asp-for="UserName" placeholder="Tên đăng nhập"
-                                   readonly>
+                            <input type="text" class="form-control" id="UserName" asp-for="UserName"
+                                placeholder="Tên đăng nhập" readonly>
                         }
                         <span asp-validation-for="UserName" class="text-danger"></span>
                     </div>
                     <div class="form-group">
                         <label for="FullName">Họ và tên</label>
-                        <input type="text" class="form-control" id="FullName" asp-for="FullName" placeholder="Họ và tên">
+                        <input type="text" class="form-control" id="FullName" asp-for="FullName"
+                            placeholder="Họ và tên">
                         <span asp-validation-for="FullName" class="text-danger"></span>
                     </div>
                     <div class="form-group">
@@ -64,14 +66,15 @@
                     <div class="form-group">
                         <label for="PhoneNumber">Số điện thoại</label>
                         <input type="number" class="form-control" id="PhoneNumber" asp-for="PhoneNumber"
-                               placeholder="Số điện thoại">
+                            placeholder="Số điện thoại">
                         <span asp-validation-for="PhoneNumber" class="text-danger"></span>
                     </div>
                     @if (string.IsNullOrEmpty(Model.Id))
                     {
                         <div class="form-group">
                             <label for="exampleInputPassword1">Mật khẩu</label>
-                            <input type="password" class="form-control" id="Password" asp-for="Password" placeholder="Mật khẩu">
+                            <input type="password" class="form-control" id="Password" asp-for="Password"
+                                placeholder="Mật khẩu">
                             <span asp-validation-for="Password" class="text-danger"></span>
                         </div>
                     }
@@ -156,7 +159,7 @@
                 fileNameSpan.textContent = 'Chưa có tệp nào được chọn';
             }
         });
-        $(document).ready(function() {
+        $(document).ready(function () {
             fileImageInput.addEventListener("change", function () {
                 const input = this.files[0];
 

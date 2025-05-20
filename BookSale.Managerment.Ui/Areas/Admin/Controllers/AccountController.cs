@@ -58,6 +58,7 @@ namespace BookSale.Managerment.Ui.Areas.Admin.Controllers
             return View(new UserDto());
         }
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Save(UserDto model)
         {
             // Kiểm tra validation trước
@@ -93,6 +94,7 @@ namespace BookSale.Managerment.Ui.Areas.Admin.Controllers
             return View(model);
         }
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(string id)
         {
             var result = await _userService.DeleteUser(id);
