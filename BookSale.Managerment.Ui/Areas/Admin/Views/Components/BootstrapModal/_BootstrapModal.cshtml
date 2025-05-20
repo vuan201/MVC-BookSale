@@ -2,7 +2,7 @@
 
 <div class="modal fade" id="bootstrap-modal" tabindex="-1" role="dialog" aria-labelledby="bootstrap-modal" aria-hidden="true">
     <div class="modal-dialog" role="document">
-        <form id="form-modal" class="modal-content" asp-action="@Model.Action" asp-controller="@Model.Controller">
+        <form id="form-modal" class="modal-content" asp-action="@Model.Action" asp-controller="@Model.Controller" asp-antiforgery="true">
             <div class="modal-header">
                 <h5 class="modal-title" id="bootstrap-modal-title"></h5>
                 <button type="button" class="close" aria-label="Close" onclick="modalClose()">

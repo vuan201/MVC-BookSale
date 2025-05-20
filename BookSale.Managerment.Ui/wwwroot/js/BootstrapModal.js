@@ -23,20 +23,21 @@ $(function () {
     // Nghe sự kiện submit của form modal
     $('#form-modal').on('submit', function (e) {
         e.preventDefault(); // Ngăn form gửi bình thường
-
-        $.ajax({
-            type: 'POST',
-            url: $(this).attr('action'), 
-            data: $(this).serialize(), // Lấy toàn bộ dữ liệu trong form
-            success: function (respone) {
-                showToaster("Success", `${respone.message}`)
-                $(table).bootstrapTable("refresh");
-                $('#bootstrap-modal').modal('hide');
-            },
-            error: function (xhr, status, error) {
-                var Response = JSON.parse(xhr.responseText)
-                showToaster("Error", `${status} ${Response.message}`)
-            }
-        });
+        if ($(this).valid()) {
+            $.ajax({
+                type: 'POST',
+                url: $(this).attr('action'), 
+                data: $(this).serialize(), // Lấy toàn bộ dữ liệu trong form
+                success: function (respone) {
+                    showToaster("Success", `${respone.message}`)
+                    $(table).bootstrapTable("refresh");
+                    $('#bootstrap-modal').modal('hide');
+                },
+                error: function (xhr, status, error) {
+                    var Response = JSON.parse(xhr.responseText)
+                    showToaster("Error", `${status} ${Response.message}`)
+                }
+            });
+        }
     });
 })
