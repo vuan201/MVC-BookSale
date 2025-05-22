@@ -4,8 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using BookSale.Managerment.Application.DTOs;
 namespace BookSale.Managerment.Ui.Areas.Admin.Controllers
 {
-    [Area("Admin")]
-    public class TestController : Controller
+    public class TestController : BaseControl
     {
         private readonly IUnitOfWork _unitOfWork;
 

@@ -10,9 +10,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace BookSale.Managerment.Ui.Areas.Admin.Controllers
 {
-    [Area("Admin")]
-    [Authorize]
-    public class AccountController : Controller
+    public class AccountController : BaseControl
     {
         private readonly IUserService _userService;
         private readonly IStorageService _storageService;

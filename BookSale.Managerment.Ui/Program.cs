@@ -2,7 +2,8 @@
 using BookSale.Managerment.DataAccess;
 using Microsoft.Extensions.Options;
 using BookSale.Managerment.Ui.Areas.Admin.Controllers;
-
+using Microsoft.AspNetCore.Authorization;
+using BookSale.Managerment.Domain.constants;
 var builder = WebApplication.CreateBuilder(args);
 
 // Đăng ký và config Database
@@ -27,6 +28,9 @@ builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
 builder.Services.AddControllersWithViews()
     .AddViewLocalization()
     .AddDataAnnotationsLocalization();
+
+// Đăng ký dịch vụ Authorization.
+builder.Services.SetAuthorization();
 
 // Cấu hình Localization
 builder.Services.LocalizationConfiguration();
@@ -85,7 +89,8 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "areas",
-    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}")
+    .RequireAuthorization(Setup.AuthorizedAdminPolicy);
 
 app.MapControllerRoute(
     name: "default",

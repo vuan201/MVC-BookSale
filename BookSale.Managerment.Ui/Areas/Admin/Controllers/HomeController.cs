@@ -4,9 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BookSale.Managerment.Ui.Areas.Admin.Controllers
 {
-    [Area("Admin")]
-    [Authorize]
-    public class HomeController : Controller
+    public class HomeController : BaseControl
     {
         private readonly IUnitOfWork _unitOfWork;
 

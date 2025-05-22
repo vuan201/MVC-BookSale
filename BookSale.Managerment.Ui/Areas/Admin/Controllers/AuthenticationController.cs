@@ -7,8 +7,8 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace BookSale.Managerment.Ui.Areas.Admin.Controllers
 {
-    [Area("Admin")]
-    public class AuthenticationController : Controller
+    [AllowAnonymous]
+    public class AuthenticationController : BaseControl
     {
         private readonly IAuthenticationService _authenticationService;
         public AuthenticationController(IAuthenticationService authenticationService)

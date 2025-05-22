@@ -9,9 +9,7 @@ using System.Threading.Tasks;
 
 namespace BookSale.Managerment.Ui.Areas.Admin.Controllers
 {
-    [Area("Admin")]
-    [Authorize]
-    public class GenreController : Controller
+    public class GenreController : BaseControl
     {
         private readonly IGenreService _genreService;
         public GenreController(IGenreService genreService)

@@ -12,6 +12,8 @@ using BookSale.Managerment.Application.Service;
 using BookSale.Managerment.Application.Mappings;
 using System.Reflection;
 using BookSale.Managerment.Application.Abstracts;
+using Microsoft.AspNetCore.Authorization;
+using BookSale.Managerment.Domain.constants;
 namespace BookSale.Managerment.DataAccess.Configuration
 {
     public static class Configuration
@@ -156,6 +158,16 @@ namespace BookSale.Managerment.DataAccess.Configuration
                 options.SetDefaultCulture(supportedCultures[0])
                     .AddSupportedCultures(supportedCultures)
                     .AddSupportedUICultures(supportedCultures);
+            });
+        }
+        // Cấu hình Authorization
+        public static void SetAuthorization(this IServiceCollection services)
+        {
+            var authorizedAdmin = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy(Setup.AuthorizedAdminPolicy, authorizedAdmin);
             });
         }
     }
