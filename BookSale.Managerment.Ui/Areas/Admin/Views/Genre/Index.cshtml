@@ -75,7 +75,7 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         var antiForgeryToken = $('input[name="__RequestVerificationToken"]').val();
-                        console.log(antiForgeryToken)
+
                         var url = `@Url.Action(nameof(GenreController.Delete), "Genre")`
                         $.ajax({
                             url: url,

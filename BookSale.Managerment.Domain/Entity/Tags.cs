@@ -12,7 +12,6 @@ namespace BookSale.Managerment.Domain.Entity
     {
         [StringLength(250)]
         public string Name { get; set; }
-        
 
         [StringLength(1000)]
         public string Description { get; set; }
