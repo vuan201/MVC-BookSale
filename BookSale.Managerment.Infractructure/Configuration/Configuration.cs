@@ -170,5 +170,14 @@ namespace BookSale.Managerment.DataAccess.Configuration
                 options.AddPolicy(Setup.AuthorizedAdminPolicy, authorizedAdmin);
             });
         }
+
+        // Thêm Anti Forgery Header
+        public static void AddAntiForgery(this IServiceCollection services)
+        {
+            services.AddAntiforgery(options =>
+            {
+                options.HeaderName = "__RequestVerificationToken"; // Đặt tên header mong muốn
+            });
+        }
     }
 }

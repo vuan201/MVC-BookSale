@@ -32,6 +32,9 @@ builder.Services.AddControllersWithViews()
 // Đăng ký dịch vụ Authorization.
 builder.Services.SetAuthorization();
 
+// Thêm Anti Forgery Header
+builder.Services.AddAntiForgery();
+
 // Cấu hình Localization
 builder.Services.LocalizationConfiguration();
 

@@ -54,5 +54,17 @@ namespace BookSale.Managerment.Ui.Areas.Admin.Controllers
 
             return BadRequest(result);
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var result = await _genreService.Delete(id);
+
+            if(result.Status)
+                return Json(result);
+
+            return BadRequest(result);
+        }
     }
 }

@@ -58,6 +58,7 @@
         {
             if(id)
             {
+
                  Swal.fire({
                     title: 'Bạn có chắc chắn muốn xóa?',
                     text: "Hành động này không thể hoàn tác!",
@@ -73,20 +74,26 @@
                     }
                 }).then((result) => {
                     if (result.isConfirmed) {
-                    var url = `@Url.Action(nameof(AccountController.Delete), "Account")/${id}`
-                    $.ajax({
-                        url: url,
-                        method:"POST",
-                        dataType: "json",
-                        success: function(respone) {
-                            showToaster("Success", `${respone.message}`)
-                            $(table).bootstrapTable("refresh");
-                        },
-                        error: function(xhr, status, error) {
-                            var Response = JSON.parse(xhr.responseText)
-                            showToaster("Error", `${status} ${Response.message}`)
-                        }
-                    })
+                        var antiForgeryToken = $('input[name="__RequestVerificationToken"]').val();
+
+                        var url = `@Url.Action(nameof(AccountController.Delete), "Account")/${id}`
+
+                        $.ajax({
+                            url: url,
+                            method:"POST",
+                            dataType: "json",
+                            headers: {
+                                '__RequestVerificationToken': antiForgeryToken // Gửi dưới dạng header
+                            },
+                            success: function(respone) {
+                                showToaster("Success", `${respone.message}`)
+                                $(table).bootstrapTable("refresh");
+                            },
+                            error: function(xhr, status, error) {
+                                var Response = JSON.parse(xhr.responseText)
+                                showToaster("Error", `${status} ${Response.message}`)
+                            }
+                        })
                     }
                 });
             }

@@ -55,7 +55,7 @@
         function customLoading(loadingMessage) {
             return loader;
         }
-        function deleteAccount(id)
+        function deleteGanre(id)
         {
             if(id)
             {
@@ -74,20 +74,26 @@
                     }
                 }).then((result) => {
                     if (result.isConfirmed) {
-                    var url = `@Url.Action(nameof(AccountController.Delete), "Account")/${id}`
-                    $.ajax({
-                        url: url,
-                        method:"POST",
-                        dataType: "json",
-                        success: function(respone) {
-                            showToaster("Success", `${respone.message}`)
-                            $(table).bootstrapTable("refresh");
-                        },
-                        error: function(xhr, status, error) {
-                            var Response = JSON.parse(xhr.responseText)
-                            showToaster("Error", `${status} ${Response.message}`)
-                        }
-                    })
+                        var antiForgeryToken = $('input[name="__RequestVerificationToken"]').val();
+                        console.log(antiForgeryToken)
+                        var url = `@Url.Action(nameof(GenreController.Delete), "Genre")`
+                        $.ajax({
+                            url: url,
+                            method:"POST",
+                            dataType: "json",
+                            headers: {
+                                '__RequestVerificationToken': antiForgeryToken // Gửi dưới dạng header
+                            },
+                            data:{id: id},
+                            success: function(respone) {
+                                showToaster("Success", `${respone.message}`)
+                                $(table).bootstrapTable("refresh");
+                            },
+                            error: function(xhr, status, error) {
+                                var Response = JSON.parse(xhr.responseText)
+                                showToaster("Error", `${status} ${Response.message}`)
+                            }
+                        })
                     }
                 });
             }
@@ -99,7 +105,7 @@
                     <button onclick="showModal('Cập nhật thể loại: Id = ${value}',${row.id}, '${row.name}', '${row.description}')" class="btn btn-inverse-info btn-icon-text">
                         <i class="mdi mdi-file-check btn-icon-append"></i>
                     </button>
-                    <button onclick="deleteAccount('${value}')" class="btn btn-inverse-danger btn-icon">
+                    <button onclick="deleteGanre(${value})" class="btn btn-inverse-danger btn-icon">
                         <i class="mdi mdi-delete btn-icon-append"></i>
                     </button>
                 </div>
