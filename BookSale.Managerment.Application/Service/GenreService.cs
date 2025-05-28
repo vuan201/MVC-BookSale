@@ -4,6 +4,7 @@ using BookSale.Managerment.Application.DTOs;
 using BookSale.Managerment.Domain.Abstract;
 using BookSale.Managerment.Domain.Entity;
 using BookSale.Managerment.Domain.constants;
+using Microsoft.EntityFrameworkCore;
 
 namespace BookSale.Managerment.Application.Service
 {
@@ -29,7 +30,7 @@ namespace BookSale.Managerment.Application.Service
 
             var total = query.Count();
 
-            var genres = query.Skip(filter.Offset).Take(filter.Limit).ToList();
+            var genres = await query.Skip(filter.Offset).Take(filter.Limit).ToListAsync();
 
             var listGenre = _mapper.Map<IEnumerable<GenreDTO>>(genres);
 

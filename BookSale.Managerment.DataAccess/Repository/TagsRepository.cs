@@ -8,5 +8,7 @@ namespace BookSale.Managerment.DataAccess.Repository
         public TagsRepository(ApplicationDbContext context) : base(context)
         {
         }
+
+        public async Task<Tags?> GetByIdAsync(int id) => await this.GetAsync(i => i.Id == id);
     }
 }

@@ -36,7 +36,12 @@ namespace BookSale.Managerment.Application.Mappings
             // Genre mappings
             CreateMap<Genres, GenreDTO>()
                 .ReverseMap()
-                .ForMember(dest => dest.Id, opt => opt.Ignore()); ;
+                .ForMember(dest => dest.Id, opt => opt.Ignore());
+
+            // Tag Mapping
+            CreateMap<Tags, TagDTO>()
+             .ReverseMap()
+             .ForMember(dest => dest.Id, opt => opt.Ignore());
 
             // BookImage mappings
             CreateMap<BookImages, BookImageDTO>().ReverseMap();

@@ -1,27 +1,30 @@
-﻿@using BookSale.Managerment.Ui.Areas.Admin.Controllers
+﻿@model BookSale.Managerment.Ui.Areas.Admin.View.Components._BootstrapModal;
+@using BookSale.Managerment.Ui.Areas.Admin.Controllers
 @using BookSale.Managerment.Ui.Areas.Admin.View.Components;
 @{
-    ViewData["Title"] = "Quản lý tài khoảng";
-    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Quản lý thẻ";
 }
+
+@await Html.PartialAsync("../Components/BootstrapModal/_BootstrapModal.cshtml", new _BootstrapModal("Save", "Tag"))
+
 <div class="card">
     <div class="card-header">
         <div class="d-flex justify-content-between align-items-center">
             <div class="title">
-                <h4>Danh sách tài khoản</h4>
+                <h4>Danh sách thẻ</h4>
             </div>
             <div class="card-action">
-                @await Html.PartialAsync("../Components/RedirectButton/_RedirectButton.cshtml", new _RedirectButtonModel("Thêm tài khoản", "Save", "Account"))
+                <button type="button" class="redirect-button" onclick="showModal('Thêm thẻ', 0, '', '')">Thêm thẻ</button>
             </div>
         </div>
     </div>
     <div class="card-body">
         <div class="">
-            <table id="account-table"
+            <table id="genre-table"
                    class="table table-striped table-hover"
                    data-toggle="table"
                    data-toolbar=".toolbar"
-                   data-url="@Url.Action(nameof(AccountController.GetListAccounts))"
+                   data-url="@Url.Action(nameof(TagController.TagList))"
                    data-unique-id="id"
                    data-side-pagination="server"
                    data-pagination="true"
@@ -31,10 +34,9 @@
                    data-loading-template="customLoading">
                 <thead>
                     <tr>
-                        <th data-field="userName">Tên đăng nhập</th>
-                        <th data-field="fullName">Họ tên</th>
-                        <th data-field="email">Email </th>
-                        <th data-field="phoneNumber">Số điện thoại</th>
+                        <th data-field="id">Id</th>
+                        <th data-field="name">tên</th>
+                        <th data-field="description">Mô tả</th>
                         <th data-field="id" data-formatter="actionFormatter">Hoạt động</th>
                     </tr>
                 </thead>
@@ -46,8 +48,7 @@
 @section Scripts {
     <script src="~/js/deletehandle.js"></script>
     <script>
-
-        var table = $("#account-table")
+        var table = $("#genre-table")
 
         function customParams(params) {
             return params;
@@ -55,15 +56,15 @@
         function customLoading(loadingMessage) {
             return loader;
         }
-        
+
         function actionFormatter(value, row, index){
-            var url = `@Url.Action(nameof(AccountController.Delete), "Account")`
+            var url = `@Url.Action(nameof(TagController.Delete), "Tag")`
             var html = `
                 <div class="table-action-btns d-flex justify-content-center align-items-center">
-                    <a href="/Admin/Account/Save/${value}" class="btn btn-inverse-info btn-icon-text">
+                    <button onclick="showModal('Cập nhật thẻ: Id = ${value}',${row.id}, '${row.name}', '${row.description}')" class="btn btn-inverse-info btn-icon-text">
                         <i class="mdi mdi-file-check btn-icon-append"></i>
-                    </a>
-                     <button onclick="deleteHandler('${value}', '${url}')" class="btn btn-inverse-danger btn-icon">
+                    </button>
+                    <button onclick="deleteHandler('${value}', '${url}')" class="btn btn-inverse-danger btn-icon">
                         <i class="mdi mdi-delete btn-icon-append"></i>
                     </button>
                 </div>
