@@ -4,5 +4,6 @@ namespace BookSale.Managerment.Domain.Abstract
 {
     public interface IBookRepository : IBaseRepository<Books>
     {
+        Task<Books?> GetBookById(int id);
     }
 }

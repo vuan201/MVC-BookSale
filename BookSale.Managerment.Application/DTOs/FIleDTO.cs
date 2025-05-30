@@ -13,7 +13,7 @@ namespace BookSale.Managerment.Application.DTOs
         public StorageType StorageType { get; set; }
         public string Name { get; set; }
         public string Key { get; set; }
-
+        public string? Url { get; set; }
         public FIleDTO(StorageType storageType, string name, string key) 
         {
             this.StorageType = storageType;

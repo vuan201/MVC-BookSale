@@ -79,6 +79,59 @@ namespace BookSale.Managerment.Application.Service
 
             return new ResponseModel<CloudinaryResponse>(true, "Upload thành công!", _mapper.Map<CloudinaryResponse>(uploadResult));
         }
+        public async Task<ResponseModel<List<CloudinaryResponse>>> UploadListImage(List<IFormFile> files)
+        {
+            if (files == null || files.Count == 0)
+            {
+                return new ResponseModel<List<CloudinaryResponse>>(false, "Không có file nào được chọn!");
+            }
+
+            var uploadTasks = files.Select(async file =>
+            {
+                await using var stream = file.OpenReadStream();
+
+                var uploadParams = new ImageUploadParams()
+                {
+                    File = new FileDescription(file.FileName, stream),
+                    UseFilename = false,
+                    UniqueFilename = false,
+                    Overwrite = true,
+                    Transformation = new Transformation().FetchFormat("png")
+                };
+
+                var uploadResult = await _cloudinary.UploadAsync(uploadParams);
+
+                if (uploadResult.Error != null)
+                {
+                    throw new Exception($"Lỗi upload {file.FileName}: {uploadResult.Error.Message}");
+                }
+
+                return _mapper.Map<CloudinaryResponse>(uploadResult);
+            });
+
+            try
+            {
+                var results = await Task.WhenAll(uploadTasks);
+                return new ResponseModel<List<CloudinaryResponse>>(true, "Upload thành công!", results.ToList());
+            }
+            catch (Exception ex)
+            {
+                return new ResponseModel<List<CloudinaryResponse>>(false, $"Upload thất bại: {ex.Message}");
+            }
+        }
+
         public string GetUrlImageByPublicId(string publicId) => _cloudinary.Api.UrlImgUp.BuildUrl(publicId);
+
+        public List<FIleDTO> SetUrlImageByPublicId(List<FIleDTO> files)
+        {
+            if(files.Count > 0)
+            {
+                foreach(var file in files)
+                {
+                    file.Url = GetUrlImageByPublicId(file.Key);
+                }
+            }
+            return files;
+        }
     }
 }

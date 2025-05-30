@@ -64,6 +64,55 @@ namespace BookSale.Managerment.Application.Service
 
             return new ResponseModel<FIleDTO>(true, "Lưu thành công", fileDto);
         }
+        public async Task<ResponseModel<List<FIleDTO>>> SaveFiles(List<FIleDTO> fileDtos, StorageType storageType)
+        {
+            if (fileDtos == null || fileDtos.Count == 0)
+            {
+                return new ResponseModel<List<FIleDTO>>(false, "Danh sách file không hợp lệ hoặc rỗng");
+            }
+
+            var cloudStorage = _unitOfWork.CloudStorageRepository.GetCloudStorageByType(storageType);
+            if (cloudStorage is null)
+            {
+                return new ResponseModel<List<FIleDTO>>(false, "Kiểu kho lưu trữ không tồn tại") ; 
+            }
+
+            var resultList = new List<FIleDTO>();
+
+            foreach (var fileDto in fileDtos)
+            {
+                if (fileDto is null || fileDto.Key is null || fileDto.Name is null)
+                {
+                    continue; // Bỏ qua file không hợp lệ
+                }
+
+                var newFile = _mapper.Map<Files>(fileDto);
+                newFile.CloudStorageId = cloudStorage.Id;
+
+                if (fileDto.Id != 0)
+                {
+                    var oldFile = await _unitOfWork.FileRepository.GetAsync(i => i.Id == fileDto.Id);
+                    if (oldFile == null)
+                    {
+                        continue; // Bỏ qua nếu không tìm thấy file
+                    }
+
+                    _mapper.Map(newFile, oldFile);
+                }
+                else
+                {
+                    await _unitOfWork.FileRepository.CreateAsync(newFile);
+                }
+
+                // Sau khi xử lý xong từng file, map lại vào DTO để lấy Id
+                _mapper.Map(newFile, fileDto);
+                resultList.Add(fileDto);
+            }
+
+            await _unitOfWork.SaveChangesAsync();
+
+            return new ResponseModel<List<FIleDTO>>(true, "Lưu thành công", resultList);
+        }
 
     }
 }

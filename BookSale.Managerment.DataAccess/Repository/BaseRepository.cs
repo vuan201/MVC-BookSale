@@ -21,6 +21,13 @@ namespace BookSale.Managerment.DataAccess.Repository
         {
             await _context.Set<TEntity>().AddAsync(entity);
         }
+        public async Task CreateAsync(IList<TEntity> entities)
+        {
+            if (entities != null && entities.Any())
+            {
+                await _context.Set<TEntity>().AddRangeAsync(entities);
+            }
+        }
 
         // Update
         public void Update(TEntity entity)

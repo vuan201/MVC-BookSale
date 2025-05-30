@@ -14,7 +14,6 @@ namespace BookSale.Managerment.Domain.Entity
         [StringLength(500)]
         public string FullName { get; set; }
 
-
         [StringLength(500)]
         public string Address { get; set; }
         public bool IsActive { get; set; }

@@ -6,6 +6,7 @@ namespace BookSale.Managerment.Domain.Abstract
     {
         Task SaveChangesAsync();
         Task CreateAsync(TEntity entity);
+        Task CreateAsync(IList<TEntity> entities);
         void Delete(TEntity entity);
         void Update(TEntity entity);
     }

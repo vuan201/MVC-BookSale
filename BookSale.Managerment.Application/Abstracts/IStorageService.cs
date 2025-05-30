@@ -7,5 +7,6 @@ namespace BookSale.Managerment.Application.Abstracts
     {
         Task<ResponseModel<CloudinaryResponse>> UploadImage(IFormFile file, string fileName);
         string GetUrlImageByPublicId(string publicId);
+        Task<ResponseModel<List<CloudinaryResponse>>> UploadListImage(List<IFormFile> files);
     }
 }
