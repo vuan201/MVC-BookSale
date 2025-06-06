@@ -15,7 +15,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{8C0C0BD0-6
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{7749AD6B-C2F4-40B0-A982-F2A92DBD7BA8}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{F71FC91C-01D2-4B86-9070-460EE17C5D64}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Imfrastructure", "Imfrastructure", "{F71FC91C-01D2-4B86-9070-460EE17C5D64}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
