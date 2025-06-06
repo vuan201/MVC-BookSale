@@ -1,4 +1,4 @@
-﻿﻿using AutoMapper;
+﻿﻿﻿﻿using AutoMapper;
 using BookSale.Managerment.Application.Abstracts;
 using BookSale.Managerment.Application.DTOs;
 using BookSale.Managerment.Domain.Abstract;
@@ -16,7 +16,7 @@ using System.Net;
 
 namespace BookSale.Managerment.Application.Service
 {
-    public class BookService
+    public class BookService : IBookService
     {
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
@@ -33,7 +33,7 @@ namespace BookSale.Managerment.Application.Service
 
         public async Task<ResponseModel<BookDetailDTO>> GetBook(int id)
         {
-            if(id <= 0) return new ResponseModel<BookDetailDTO>(false, ResponseMessage.InvalidValue);
+            if (id <= 0) return new ResponseModel<BookDetailDTO>(false, ResponseMessage.InvalidValue);
 
             var book = await _unitOfWork.BookRepository.GetBookById(id);
 
@@ -69,7 +69,7 @@ namespace BookSale.Managerment.Application.Service
         }
         public async Task<ResponseModel<BookDetailDTO>> Create(BookDetailDTO bookDetail)
         {
-            if (bookDetail is null) 
+            if (bookDetail is null)
                 return new ResponseModel<BookDetailDTO>(false, ResponseMessage.InvalidValue);
 
             try
@@ -79,22 +79,22 @@ namespace BookSale.Managerment.Application.Service
                 {
                     Code = UniqueCodeGenerator.GenerateUniqueGuid()
                 };
-                
+
                 _mapper.Map(bookDetail, newBook);
-                
+
                 // Lưu sách vào database
                 await _unitOfWork.BookRepository.CreateAsync(newBook);
                 await _unitOfWork.SaveChangesAsync();
-                
+
                 // Xử lý upload ảnh song song nếu có
                 await ProcessBookImages(bookDetail, newBook);
-                
+
                 // Xử lý thêm tags nếu có
                 await ProcessBookTags(bookDetail, newBook);
-                
+
                 // Map dữ liệu từ entity trở lại DTO để trả về
                 _mapper.Map(newBook, bookDetail);
-                
+
                 return new ResponseModel<BookDetailDTO>(true, ResponseMessage.CreateSuccess, bookDetail);
             }
             catch (Exception ex)
@@ -103,52 +103,163 @@ namespace BookSale.Managerment.Application.Service
                 return new ResponseModel<BookDetailDTO>(false, $"Lỗi khi tạo sách: {ex.Message}");
             }
         }
-        
+
+        public async Task<ResponseModel<BookDetailDTO>> Update(int id, BookDetailDTO bookDetail)
+        {
+            if (id <= 0 || bookDetail is null)
+                return new ResponseModel<BookDetailDTO>(false, ResponseMessage.InvalidValue);
+
+            try
+            {
+                // Tìm sách cần cập nhật
+                var existingBook = await _unitOfWork.BookRepository.GetBookById(id);
+                
+                if (existingBook is null)
+                    return new ResponseModel<BookDetailDTO>(false, ResponseMessage.DoesNotExist);
+
+                // Map dữ liệu mới vào entity hiện tại (giữ nguyên Code và Id)
+                var originalCode = existingBook.Code;
+                var originalId = existingBook.Id;
+                
+                _mapper.Map(bookDetail, existingBook);
+                
+                // Đảm bảo không thay đổi Code và Id
+                existingBook.Code = originalCode;
+                existingBook.Id = originalId;
+
+                // Cập nhật sách trong database
+                _unitOfWork.BookRepository.Update(existingBook);
+                await _unitOfWork.SaveChangesAsync();
+
+                // Xử lý cập nhật ảnh nếu có
+                await UpdateBookImages(bookDetail, existingBook);
+
+                // Xử lý cập nhật tags nếu có
+                await UpdateBookTags(bookDetail, existingBook);
+
+                // Map dữ liệu từ entity trở lại DTO để trả về
+                var updatedBookDTO = _mapper.Map<BookDetailDTO>(existingBook);
+
+                return new ResponseModel<BookDetailDTO>(true, ResponseMessage.UpdateSuccess, updatedBookDTO);
+            }
+            catch (Exception ex)
+            {
+                // Xử lý ngoại lệ nếu có
+                return new ResponseModel<BookDetailDTO>(false, $"Lỗi khi cập nhật sách: {ex.Message}");
+            }
+        }
+
         // Phương thức riêng để xử lý hình ảnh của sách
         private async Task ProcessBookImages(BookDetailDTO bookDetail, Books newBook)
         {
             if (bookDetail.ImageFiles?.Any() != true)
                 return;
-                
+
             var uploadResult = await _cloudinaryService.UploadListImage(bookDetail.ImageFiles.ToList());
-            
+
             if (!uploadResult.Status || uploadResult.Data == null)
                 return;
-                
+
             // Upload ảnh lên storage
             var listFileDTO = uploadResult.Data
                 .Select(i => new FIleDTO(
-                    StorageType.Cloudinary, 
-                    newBook.Code + i.PublicId, 
+                    StorageType.Cloudinary,
+                    newBook.Code + i.PublicId,
                     i.PublicId ?? string.Empty))
                 .ToList();
-                
+
             // Lưu thông tin về db
             var saveFileResult = await _fileService.SaveFiles(listFileDTO, StorageType.Cloudinary);
-            
+
             if (!saveFileResult.Status || saveFileResult.Data == null)
                 return;
-                
+
             // Lưu vào BookImage
             foreach (var fileDto in saveFileResult.Data)
             {
                 newBook.BookImages.Add(new BookImages { BookId = newBook.Id, ImageId = fileDto.Id });
             }
-                
+
             await _unitOfWork.SaveChangesAsync();
         }
-        
+
         // Phương thức riêng để xử lý tags của sách
         private async Task ProcessBookTags(BookDetailDTO bookDetail, Books newBook)
         {
             if (bookDetail.BookTags?.Any() != true)
                 return;
-                
+
             foreach (var tag in bookDetail.BookTags)
             {
                 newBook.BookTags.Add(new BookTags { BookId = newBook.Id, TagId = tag.Id });
             }
-                
+
+            await _unitOfWork.SaveChangesAsync();
+        }
+
+        // Phương thức riêng để cập nhật hình ảnh của sách
+        private async Task UpdateBookImages(BookDetailDTO bookDetail, Books existingBook)
+        {
+            // Nếu không có ảnh mới thì không làm gì
+            if (bookDetail.ImageFiles?.Any() != true)
+                return;
+
+            // Xóa các ảnh cũ
+            var oldBookImages = existingBook.BookImages.ToList();
+            foreach (var oldImage in oldBookImages)
+            {
+                existingBook.BookImages.Remove(oldImage);
+            }
+
+            // Upload ảnh mới lên storage
+            var uploadResult = await _cloudinaryService.UploadListImage(bookDetail.ImageFiles.ToList());
+
+            if (!uploadResult.Status || uploadResult.Data == null)
+                return;
+
+            // Tạo danh sách file DTO
+            var listFileDTO = uploadResult.Data
+                .Select(i => new FIleDTO(
+                    StorageType.Cloudinary,
+                    existingBook.Code + i.PublicId,
+                    i.PublicId ?? string.Empty))
+                .ToList();
+
+            // Lưu thông tin file vào database
+            var saveFileResult = await _fileService.SaveFiles(listFileDTO, StorageType.Cloudinary);
+
+            if (!saveFileResult.Status || saveFileResult.Data == null)
+                return;
+
+            // Thêm ảnh mới vào BookImage
+            foreach (var fileDto in saveFileResult.Data)
+            {
+                existingBook.BookImages.Add(new BookImages { BookId = existingBook.Id, ImageId = fileDto.Id });
+            }
+
+            await _unitOfWork.SaveChangesAsync();
+        }
+
+        // Phương thức riêng để cập nhật tags của sách
+        private async Task UpdateBookTags(BookDetailDTO bookDetail, Books existingBook)
+        {
+            // Nếu không có tags mới thì không làm gì
+            if (bookDetail.BookTags?.Any() != true)
+                return;
+
+            // Xóa các tags cũ
+            var oldBookTags = existingBook.BookTags.ToList();
+            foreach (var oldTag in oldBookTags)
+            {
+                existingBook.BookTags.Remove(oldTag);
+            }
+
+            // Thêm tags mới
+            foreach (var tag in bookDetail.BookTags)
+            {
+                existingBook.BookTags.Add(new BookTags { BookId = existingBook.Id, TagId = tag.Id });
+            }
+
             await _unitOfWork.SaveChangesAsync();
         }
     }

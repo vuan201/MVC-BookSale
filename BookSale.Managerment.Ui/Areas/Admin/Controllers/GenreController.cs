@@ -29,12 +29,14 @@ namespace BookSale.Managerment.Ui.Areas.Admin.Controllers
                 return BadRequest(new { message = "Params khôn hợp lệ!" });
             }
 
-            var genres = await _genreService.GetGenreList(filter);
+            var result = await _genreService.GetGenreList(filter);
+
+            if(result.Status == false) return BadRequest(result);
 
             return Json(new TableViewModel<GenreDTO>()
             {
-                total = genres.Total,
-                Rows = genres.Data?.ToList()
+                total = result.Total,
+                Rows = result.Data?.ToList()
             });
         }
         [HttpPost]
