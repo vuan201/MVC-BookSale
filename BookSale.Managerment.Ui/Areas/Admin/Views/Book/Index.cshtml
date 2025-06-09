@@ -36,12 +36,12 @@
                         <th data-field="code">Mã</th>
                         <th data-field="name">Tên</th>
                         <th data-field="quantity">Số lượng</th>
-                        <th data-field="price">Giá</th>
+                        <th data-field="price" data-formatter="moneyFormatter">Giá</th>
                         <th data-field="genreName">Thể loại</th>
                         <th data-field="authorName">Tác giả</th>
-                        <th data-field="bookTags">Thẻ</th>
-                        <th data-field="createdDate">Ngày tạo</th>
-                        <th data-field="updatedDate">Ngày cập nhật</th>
+                        <th data-field="bookTags" data-formatter="tagFormatter">Thẻ</th>
+                        <th data-field="createdDate" data-formatter="dateFormatter">Ngày tạo</th>
+                        <th data-field="updatedDate" data-formatter="dateFormatter">Ngày cập nhật</th>
                         <th data-field="id" data-formatter="actionFormatter">Hoạt động</th>
                     </tr>
                 </thead>
@@ -60,6 +60,15 @@
         }
         function customLoading(loadingMessage) {
             return loader;
+        }
+
+
+
+        function tagFormatter(value, row, index)
+        {
+            var tagList = value.map(i => i.name)
+
+            return arrayJoinFormatter(tagList, row, index);
         }
 
         function actionFormatter(value, row, index){

@@ -13,6 +13,7 @@ using System.Text;
 using System.Threading.Tasks;
 using BookSale.Managerment.Domain.Extension;
 using System.Net;
+using BookSale.Managerment.Application.FakeData;
 
 namespace BookSale.Managerment.Application.Service
 {
@@ -64,6 +65,8 @@ namespace BookSale.Managerment.Application.Service
                                     .ToListAsync();
 
             var listGenre = _mapper.Map<IEnumerable<BookDTO>>(genres);
+
+            if(listGenre.Count() == 0) listGenre = FakeData.FakeData.GenerateFakeBooks(59);
 
             return new ResponseModel<IEnumerable<BookDTO>>(true, ResponseMessage.GetDataSuccess, total, listGenre);
         }
