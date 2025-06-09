@@ -1,4 +1,5 @@
 ﻿using BookSale.Managerment.Domain.Entity;
+using System.ComponentModel.DataAnnotations;
 
 namespace BookSale.Managerment.Application.DTOs
 {
@@ -6,6 +7,7 @@ namespace BookSale.Managerment.Application.DTOs
     {
         public int Id { get; set; }
         public string Code { get; set; }
+        [Required(ErrorMessage = "Tên không được để trống")]
         public string Name { get; set; }
         public string? Description { get; set; }
         public int Quantity { get; set; }

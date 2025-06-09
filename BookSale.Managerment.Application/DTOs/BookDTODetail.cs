@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using BookSale.Managerment.Domain.Extension;
+using Microsoft.AspNetCore.Http;
 
 namespace BookSale.Managerment.Application.DTOs
 {
@@ -8,5 +9,9 @@ namespace BookSale.Managerment.Application.DTOs
         public string AuthorId { get; set; }
         public ICollection<IFormFile>? ImageFiles { get; set; }
         public IEnumerable<FIleDTO>? BookImages { get; set; }
+        public BookDetailDTO()
+        {
+            this.Code = UniqueCodeGenerator.GenerateUniqueGuid();
+        }
     }
 }
