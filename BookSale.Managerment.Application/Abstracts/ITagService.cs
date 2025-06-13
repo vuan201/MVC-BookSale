@@ -6,6 +6,7 @@ namespace BookSale.Managerment.Application.Abstracts
     {
         Task<ResponseModel<TagDTO>> Create(TagDTO genre);
         Task<ResponseModel<TagDTO>> Delete(int id);
+        Task<ResponseModel<List<TagDTO>>> GetAll();
         Task<ResponseModel<IEnumerable<TagDTO>>> GetTagList(RequestFilterModel filter);
         Task<ResponseModel<TagDTO>> Update(TagDTO genre);
     }

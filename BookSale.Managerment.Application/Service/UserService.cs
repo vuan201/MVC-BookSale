@@ -1,12 +1,14 @@
 ﻿using AutoMapper;
 using BookSale.Managerment.Application.Abstracts;
 using BookSale.Managerment.Application.DTOs;
+using BookSale.Managerment.Domain;
 using BookSale.Managerment.Domain.Abstract;
 using BookSale.Managerment.Domain.constants;
 using BookSale.Managerment.Domain.Entity;
 using BookSale.Managerment.Domain.Enums;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace BookSale.Managerment.Application.Service
 {
@@ -34,7 +36,20 @@ namespace BookSale.Managerment.Application.Service
             {
                 var user = await _userManager.FindByNameAsync(username);
                 if (user is not null)
-                    return _mapper.Map<UserDto>(user);
+                {
+                    var userDto = _mapper.Map<UserDto>(user);
+
+                    // Lấy avatar nếu có
+                    if (user.Avatar is not null)
+                    {
+                        userDto.AvatarUrl = _cloundinaryService.GetUrlImageByPublicId(user.Avatar.Key);
+                    }
+
+                    // Lấy role
+                    var roles = await _userManager.GetRolesAsync(user);
+                    userDto.RoleName = roles.FirstOrDefault();
+                    return userDto;
+                }
             }
             return null;
         }
@@ -47,11 +62,13 @@ namespace BookSale.Managerment.Application.Service
                 {
                     var userDto = _mapper.Map<UserDto>(user);
 
+                    // Lấy avatar nếu có
                     if(user.Avatar is not null)
                     {
                         userDto.AvatarUrl = _cloundinaryService.GetUrlImageByPublicId(user.Avatar.Key);
                     }
 
+                    // Lấy role
                     var roles = await _userManager.GetRolesAsync(user);
                     userDto.RoleName = roles.FirstOrDefault();
                     return userDto;
@@ -76,6 +93,32 @@ namespace BookSale.Managerment.Application.Service
             var users = query.Where(i => i.IsActive).Skip(filter.Offset).Take(filter.Limit).ToList();
 
             return new ResponseModel<List<UserDto>>(true, ResponseMessage.GetDataSuccess, total, _mapper.Map<List<UserDto>>(users));
+        }
+        public async Task<ResponseModel<List<UserDto>>> GetAllAuthor()
+        {
+            // Bước 1: Lấy tất cả user đang hoạt động
+            var activeUsers = await _userManager.Users
+                .Where(i => i.IsActive)
+                .ToListAsync();
+
+            // Bước 2: Lọc ra các user có vai trò là Author (xử lý phía client)
+            var authors = new List<ApplicationUser>();
+            foreach (var user in activeUsers)
+            {
+                if (await _userManager.IsInRoleAsync(user, Roles.Author))
+                {
+                    authors.Add(user);
+                }
+            }
+
+            // Bước 3: Mapping và trả kết quả
+            if (authors.Count > 0)
+            {
+                var authorDto = _mapper.Map<List<UserDto>>(authors);
+                return new ResponseModel<List<UserDto>>(true, ResponseMessage.GetDataSuccess, authorDto);
+            }
+
+            return new ResponseModel<List<UserDto>>(false, ResponseMessage.DoesNotExist);
         }
         public async Task<ResponseModel> Create(UserDto model)
         {

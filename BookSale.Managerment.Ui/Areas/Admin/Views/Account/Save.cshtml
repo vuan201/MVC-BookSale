@@ -18,7 +18,7 @@
                         @* @Html.DropDownListFor(x => x.RoleName, (IEnumerable<SelectListItem>)roleList, "Chọn role",new{@class =
                         "form-control"} ) *@
                         <select class="form-control" asp-for="RoleName">
-                            <option>--Chọn role--</option>
+                            <option>--Chọn vai trò--</option>
                             @foreach (var item in Roles.GetRoles())
                             {
                                 if (!string.IsNullOrEmpty(Model.Id) && Model.RoleName == item)

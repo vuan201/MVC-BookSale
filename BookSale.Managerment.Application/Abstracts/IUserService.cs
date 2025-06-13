@@ -11,5 +11,6 @@ namespace BookSale.Managerment.Application.Abstracts
         Task<ResponseModel> Create(UserDto model);
         Task<ResponseModel> Update(UserDto model);
         Task<ResponseModel> DeleteUser(string id);
+        Task<ResponseModel<List<UserDto>>> GetAllAuthor();
     }
 }

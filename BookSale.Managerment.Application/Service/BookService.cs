@@ -1,4 +1,4 @@
-﻿﻿﻿﻿using AutoMapper;
+﻿﻿﻿﻿﻿﻿using AutoMapper;
 using BookSale.Managerment.Application.Abstracts;
 using BookSale.Managerment.Application.DTOs;
 using BookSale.Managerment.Domain.Abstract;
@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using BookSale.Managerment.Domain.Extension;
 using System.Net;
 using BookSale.Managerment.Application.FakeData;
+using Microsoft.AspNetCore.Identity;
 
 namespace BookSale.Managerment.Application.Service
 {
@@ -23,13 +24,15 @@ namespace BookSale.Managerment.Application.Service
         private readonly IUnitOfWork _unitOfWork;
         private readonly IStorageService _cloudinaryService;
         private readonly IFileService _fileService;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public BookService(IMapper mapper, IUnitOfWork unitOfWork, IStorageServiceFactory storageServiceFactory, IFileService fileService)
+        public BookService(IMapper mapper, IUnitOfWork unitOfWork, IStorageServiceFactory storageServiceFactory, IFileService fileService, UserManager<ApplicationUser> userManager)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
             _cloudinaryService = storageServiceFactory.GetStorageService(StorageType.Cloudinary);
             _fileService = fileService;
+            _userManager = userManager;
         }
 
         public async Task<ResponseModel<BookDetailDTO>> GetBook(int id)
@@ -75,13 +78,17 @@ namespace BookSale.Managerment.Application.Service
             if (bookDetail is null)
                 return new ResponseModel<BookDetailDTO>(false, ResponseMessage.InvalidValue);
 
+            // Validate AuthorId và GenreId
+            if (string.IsNullOrEmpty(bookDetail.AuthorId))
+                return new ResponseModel<BookDetailDTO>(false, "AuthorId không được để trống");
+
+            if (bookDetail.GenreId <= 0)
+                return new ResponseModel<BookDetailDTO>(false, "GenreId không hợp lệ");
+
             try
             {
                 // Tạo một model mới và map dữ liệu qua
-                var newBook = new Books
-                {
-                    Code = UniqueCodeGenerator.GenerateUniqueGuid()
-                };
+                var newBook = new Books();
 
                 _mapper.Map(bookDetail, newBook);
 
@@ -111,6 +118,13 @@ namespace BookSale.Managerment.Application.Service
         {
             if (id <= 0 || bookDetail is null)
                 return new ResponseModel<BookDetailDTO>(false, ResponseMessage.InvalidValue);
+
+            // Validate AuthorId và GenreId
+            if (string.IsNullOrEmpty(bookDetail.AuthorId))
+                return new ResponseModel<BookDetailDTO>(false, "AuthorId không được để trống");
+
+            if (bookDetail.GenreId <= 0)
+                return new ResponseModel<BookDetailDTO>(false, "GenreId không hợp lệ");
 
             try
             {
@@ -189,12 +203,14 @@ namespace BookSale.Managerment.Application.Service
         // Phương thức riêng để xử lý tags của sách
         private async Task ProcessBookTags(BookDetailDTO bookDetail, Books newBook)
         {
-            if (bookDetail.BookTags?.Any() != true)
+            if (bookDetail.BookTagIds?.Any() != true)
                 return;
 
-            foreach (var tag in bookDetail.BookTags)
+            if(newBook.BookTags is null) newBook.BookTags = new List<BookTags>();
+
+            foreach (var id in bookDetail.BookTagIds)
             {
-                newBook.BookTags.Add(new BookTags { BookId = newBook.Id, TagId = tag.Id });
+                newBook.BookTags.Add(new BookTags { BookId = newBook.Id, TagId = id });
             }
 
             await _unitOfWork.SaveChangesAsync();
@@ -234,6 +250,8 @@ namespace BookSale.Managerment.Application.Service
             if (!saveFileResult.Status || saveFileResult.Data == null)
                 return;
 
+            if(existingBook.BookTags is null) existingBook.BookTags = new List<BookTags>();
+
             // Thêm ảnh mới vào BookImage
             foreach (var fileDto in saveFileResult.Data)
             {
@@ -247,7 +265,7 @@ namespace BookSale.Managerment.Application.Service
         private async Task UpdateBookTags(BookDetailDTO bookDetail, Books existingBook)
         {
             // Nếu không có tags mới thì không làm gì
-            if (bookDetail.BookTags?.Any() != true)
+            if (bookDetail.BookTagIds?.Any() != true)
                 return;
 
             // Xóa các tags cũ
@@ -258,9 +276,9 @@ namespace BookSale.Managerment.Application.Service
             }
 
             // Thêm tags mới
-            foreach (var tag in bookDetail.BookTags)
+            foreach (var id in bookDetail.BookTagIds)
             {
-                existingBook.BookTags.Add(new BookTags { BookId = existingBook.Id, TagId = tag.Id });
+                existingBook.BookTags.Add(new BookTags { BookId = existingBook.Id, TagId = id });
             }
 
             await _unitOfWork.SaveChangesAsync();

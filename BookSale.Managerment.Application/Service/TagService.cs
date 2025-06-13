@@ -36,6 +36,12 @@ namespace BookSale.Managerment.Application.Service
 
             return new ResponseModel<IEnumerable<TagDTO>>(true, ResponseMessage.GetDataSuccess,total, listGenre);
         }
+        public async Task<ResponseModel<List<TagDTO>>> GetAll()
+        {
+            var result = await _unitOfWork.TagsRepository.GetAllTag();
+
+            return new ResponseModel<List<TagDTO>>(true, ResponseMessage.GetDataSuccess, _mapper.Map<List<TagDTO>>(result));
+        }
         public async Task<ResponseModel<TagDTO>> Create(TagDTO genre)
         {
             if (genre is null || genre.Name is null) 

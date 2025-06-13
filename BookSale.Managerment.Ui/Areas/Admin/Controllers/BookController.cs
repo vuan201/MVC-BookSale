@@ -9,10 +9,16 @@ namespace BookSale.Managerment.Ui.Areas.Admin.Controllers
     public class BookController : BaseControl
     {
         private readonly IBookService _bookService;
+        private readonly IGenreService _genreService;
+        private readonly ITagService _tagService;
+        private readonly IUserService _userService;
 
-        public BookController(IBookService bookService)
+        public BookController(IBookService bookService, IGenreService genreService, ITagService tagService, IUserService userService)
         {
             _bookService = bookService;
+            _genreService = genreService;
+            _tagService = tagService;
+            _userService = userService;
         }
 
         public IActionResult Index()
@@ -39,6 +45,14 @@ namespace BookSale.Managerment.Ui.Areas.Admin.Controllers
         }
         public async Task<IActionResult> Save(int? id)
         {
+            var genres = await _genreService.GetAll();
+            var tags = await _tagService.GetAll();
+            var authors = await _userService.GetAllAuthor();
+
+            ViewBag.Genres = genres.Data ?? new List<GenreDTO>();
+            ViewBag.Tags = tags.Data ?? new List<TagDTO>();
+            ViewBag.Authors = authors.Data ?? new List<UserDto>();
+
             if(id is not null)
             {
                 var result = await _bookService.GetBook(id.Value);
@@ -48,6 +62,8 @@ namespace BookSale.Managerment.Ui.Areas.Admin.Controllers
             }
             return View(new BookDetailDTO());
         }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Save(BookDetailDTO model)
         {
             if(!ModelState.IsValid)
@@ -61,7 +77,7 @@ namespace BookSale.Managerment.Ui.Areas.Admin.Controllers
 
             if(result.Status == false) return BadRequest(result);
 
-            return Json(result);
+            return View(result);
         }
     }
 }

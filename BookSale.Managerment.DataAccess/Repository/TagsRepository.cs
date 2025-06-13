@@ -10,5 +10,10 @@ namespace BookSale.Managerment.DataAccess.Repository
         }
 
         public async Task<Tags?> GetByIdAsync(int id) => await this.GetAsync(i => i.Id == id);
+        public async Task<List<Tags>?> GetAllTag()
+        {
+            var result = await GetListAsync();
+            return result.ToList();
+        }
     }
 }
