@@ -100,7 +100,16 @@ namespace BookSale.Managerment.Application.Service
                 await ProcessBookImages(bookDetail, newBook);
 
                 // Xử lý thêm tags nếu có
-                await ProcessBookTags(bookDetail, newBook);
+                if (bookDetail.BookTagIds?.Any() == true)
+                {
+                    if (newBook.BookTags is null) newBook.BookTags = new List<BookTags>();
+
+                    foreach (var i in bookDetail.BookTagIds)
+                    {
+                        newBook.BookTags.Add(new BookTags { BookId = newBook.Id, TagId = i });
+                    }
+                    await _unitOfWork.SaveChangesAsync();
+                }
 
                 // Map dữ liệu từ entity trở lại DTO để trả về
                 _mapper.Map(newBook, bookDetail);
@@ -152,8 +161,24 @@ namespace BookSale.Managerment.Application.Service
                 await UpdateBookImages(bookDetail, existingBook);
 
                 // Xử lý cập nhật tags nếu có
-                await UpdateBookTags(bookDetail, existingBook);
+                // Nếu không có tags mới thì không làm gì
+                if (bookDetail.BookTagIds?.Any() == true)
+                {
+                    // Xóa các tags cũ
+                    var oldBookTags = existingBook.BookTags.ToList();
+                    foreach (var oldTag in oldBookTags)
+                    {
+                        existingBook.BookTags.Remove(oldTag);
+                    }
 
+                    // Thêm tags mới
+                    foreach (var i in bookDetail.BookTagIds)
+                    {
+                        existingBook.BookTags.Add(new BookTags { BookId = existingBook.Id, TagId = i });
+                    }
+                }
+
+                await _unitOfWork.SaveChangesAsync();
                 // Map dữ liệu từ entity trở lại DTO để trả về
                 var updatedBookDTO = _mapper.Map<BookDetailDTO>(existingBook);
 
@@ -200,22 +225,6 @@ namespace BookSale.Managerment.Application.Service
             await _unitOfWork.SaveChangesAsync();
         }
 
-        // Phương thức riêng để xử lý tags của sách
-        private async Task ProcessBookTags(BookDetailDTO bookDetail, Books newBook)
-        {
-            if (bookDetail.BookTagIds?.Any() != true)
-                return;
-
-            if(newBook.BookTags is null) newBook.BookTags = new List<BookTags>();
-
-            foreach (var id in bookDetail.BookTagIds)
-            {
-                newBook.BookTags.Add(new BookTags { BookId = newBook.Id, TagId = id });
-            }
-
-            await _unitOfWork.SaveChangesAsync();
-        }
-
         // Phương thức riêng để cập nhật hình ảnh của sách
         private async Task UpdateBookImages(BookDetailDTO bookDetail, Books existingBook)
         {
@@ -256,29 +265,6 @@ namespace BookSale.Managerment.Application.Service
             foreach (var fileDto in saveFileResult.Data)
             {
                 existingBook.BookImages.Add(new BookImages { BookId = existingBook.Id, ImageId = fileDto.Id });
-            }
-
-            await _unitOfWork.SaveChangesAsync();
-        }
-
-        // Phương thức riêng để cập nhật tags của sách
-        private async Task UpdateBookTags(BookDetailDTO bookDetail, Books existingBook)
-        {
-            // Nếu không có tags mới thì không làm gì
-            if (bookDetail.BookTagIds?.Any() != true)
-                return;
-
-            // Xóa các tags cũ
-            var oldBookTags = existingBook.BookTags.ToList();
-            foreach (var oldTag in oldBookTags)
-            {
-                existingBook.BookTags.Remove(oldTag);
-            }
-
-            // Thêm tags mới
-            foreach (var id in bookDetail.BookTagIds)
-            {
-                existingBook.BookTags.Add(new BookTags { BookId = existingBook.Id, TagId = id });
             }
 
             await _unitOfWork.SaveChangesAsync();

@@ -62,10 +62,18 @@ namespace BookSale.Managerment.Application.Mappings
 
                 // Tạo trường BookTags từ nguồn BookTags
                 // Sử dụng Select() để lấy danh sách các tên tag của mỗi cuốn sách
-                .ForMember(dest => dest.BookTagIds, opt => opt.MapFrom(src => src.BookTags.Select(i => i.Tags.Id)))
+                .ForMember(dest => dest.BookTagIds,
+                           opt => opt.MapFrom(src =>
+                               src.BookTags != null
+                                   ? src.BookTags
+                                       .Select(i => i.TagId)
+                                       .ToList()
+                                   : new List<int>()))
+
 
                 // Tạo trường BookImages từ BookImages => Images
                 .ForMember(dest => dest.BookImages, opt => opt.MapFrom(src => src.BookImages.Select(i => i.Images)))
+
                 .ReverseMap()
                 .ForMember(dest => dest.BookTags, opt => opt.Ignore())
                 .ForMember(dest => dest.BookImages, opt => opt.Ignore())

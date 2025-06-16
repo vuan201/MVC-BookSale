@@ -77,7 +77,7 @@ namespace BookSale.Managerment.Ui.Areas.Admin.Controllers
 
             if(result.Status == false) return BadRequest(result);
 
-            return View(result);
+            return Redirect(nameof(Index));
         }
     }
 }
