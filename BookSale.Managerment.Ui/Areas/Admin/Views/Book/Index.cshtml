@@ -12,7 +12,7 @@
                 <h4>Danh sách sách</h4>
             </div>
             <div class="card-action">
-                <button type="button" class="redirect-button" onclick="showModal('Thêm thể loại sách', 0, '', '')">Thêm sách</button>
+                @await Html.PartialAsync("../Components/RedirectButton/_RedirectButton.cshtml", new _RedirectButtonModel("Thêm sách", "Save", "Book"))
             </div>
         </div>
     </div>

@@ -8,17 +8,12 @@
     <div class="row">
         <div class="col-md-6 grid-margin stretch-card">
             <div class="card">
-                <div class="card-body"></div>
-            </div>
-        </div>
-        <div class="col-md-6 grid-margin stretch-card">
-            <div class="card">
                 <div class="card-body">
                     <h4 class="card-title">Tạo sách mới</h4>
                     <input type="hidden" asp-for="Id" class="form-control" />
                     <div class="form-group">
                         <label asp-for="Code" class="control-label"></label>
-                        <input asp-for="Code" class="form-control" readonly/>
+                        <input asp-for="Code" class="form-control" readonly />
                         <span asp-validation-for="Code" class="text-danger"></span>
                     </div>
                     <div class="form-group">
@@ -78,6 +73,31 @@
                 </div>
             </div>
         </div>
+        <div class="col-md-6 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <div class="image-section">
+                        <h2 class="text-2xl font-bold mb-4">Ảnh Sản Phẩm</h2>
+                        <input id="image-files" type="file" multiple asp-for="ImageFiles" class="d-none" />
+                        <div class="main-image-area mb-4" id="mainImageArea">
+                            <input type="file" id="mainImageInput" accept="image/*" class="d-none"> <img id="mainImagePreview" class="hidden" src="" alt="Ảnh chính">
+                            <div id="mainImagePlaceholder" class="main-image-placeholder">
+                                <i class="fas fa-plus"></i>
+                                <p class="mt-2 text-sm">Chọn ảnh chính (Bìa sách)</p>
+                            </div>
+                            <button type="button" class="delete-image-btn hidden" id="deleteMainImageBtn">&times;</button>
+                        </div>
+
+                        <h3 class="text-xl font-bold mb-3">Các ảnh khác</h3>
+                        <div id="secondary-images-list" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 mb-4">
+                        </div>
+
+                        <label for="secondaryImageUploadInput" class="add-secondary-image-button">Thêm ảnh khác</label>
+                        <input type="file" id="secondaryImageUploadInput" accept="image/*" multiple class="d-none">
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </form>
 
@@ -85,4 +105,218 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+    <!-- Thêm Tailwind CSS (cho các tiện ích responsive và styling chung) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        // Đối tượng để lưu trữ các File thực tế, không phải URL Base64
+        const uploadedFiles = {
+            main: null,
+            secondary: []
+        };
+
+        $(document).ready(function() {
+            // Chúng ta sẽ không tương tác trực tiếp với $imageFiles để gán giá trị
+            // mà sẽ đảm bảo các input file gốc (mainImageInput, secondaryImageUploadInput)
+            // được sử dụng đúng cách hoặc gửi dữ liệu qua FormData.
+            // Nếu bạn muốn dùng form submit thông thường, bạn cần gán file vào mainImageInput
+            // và secondaryImageUploadInput, và ensure chúng có name attribute phù hợp.
+
+            // Tuy nhiên, với cấu trúc hiện tại, chúng ta sẽ giả định bạn muốn gửi qua AJAX.
+            // Vì lý do bảo mật, bạn không thể đặt giá trị cho một input type="file"
+            // bằng một File object từ JavaScript.
+            // Giải pháp hiệu quả nhất là sử dụng FormData khi bạn gửi dữ liệu về server.
+
+            const $mainImageArea = $('#mainImageArea');
+            const $mainImageInput = $('#mainImageInput');
+            const $mainImagePreview = $('#mainImagePreview');
+            const $mainImagePlaceholder = $('#mainImagePlaceholder');
+            const $deleteMainImageBtn = $('#deleteMainImageBtn');
+            const $secondaryImagesList = $('#secondary-images-list');
+            const $secondaryImageUploadInput = $('#secondaryImageUploadInput');
+
+            // Kích hoạt input file chính khi nhấp vào vùng placeholder
+            $mainImagePlaceholder.on('click', function() {
+                $mainImageInput.click();
+            });
+            // Kích hoạt input file chính khi nhấp vào ảnh xem trước (nếu đã có ảnh)
+            $mainImagePreview.on('click', function() {
+                if (uploadedFiles.main) { // Chỉ kích hoạt nếu đã có ảnh để xem lại hoặc thay đổi
+                    $mainImageInput.click();
+                }
+            });
+
+
+            /**
+             * Xử lý tải lên ảnh chính và hiển thị ảnh xem trước.
+             */
+            $mainImageInput.on('change', function(event) {
+                const file = event.target.files[0];
+                if (file) {
+                    uploadedFiles.main = file; // Lưu trữ File object thực tế
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        updateMainImagePreview(e.target.result); // Cập nhật xem trước bằng Base64 URL
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            /**
+             * Cập nhật hiển thị ảnh chính xem trước và nút xóa.
+             * {string|null} imageUrl - URL của ảnh (Base64 hoặc URL trực tiếp) hoặc null.
+             */
+            function updateMainImagePreview(imageUrl) {
+                if (uploadedFiles.main && imageUrl) {
+                    $mainImagePreview.attr('src', imageUrl).removeClass('hidden');
+                    $mainImagePlaceholder.addClass('hidden');
+                    $deleteMainImageBtn.removeClass('hidden');
+                    $mainImageArea.removeClass('border-dashed border-gray-600 bg-gray-700');
+                } else {
+                    $mainImagePreview.attr('src', '').addClass('hidden');
+                    $mainImagePlaceholder.removeClass('hidden');
+                    $deleteMainImageBtn.addClass('hidden');
+                    $mainImageArea.addClass('border-dashed border-gray-600 bg-gray-700');
+                    // Không reset $mainImageInput.val('') ở đây nếu bạn muốn giữ File object trong `uploadedFiles.main`
+                    // Chỉ reset khi người dùng xóa ảnh thủ công
+                }
+            }
+
+            /**
+             * Xóa ảnh chính đã chọn.
+             */
+            $deleteMainImageBtn.on('click', function() {
+                uploadedFiles.main = null; // Xóa File object
+                $mainImageInput.val(''); // Đặt lại input file để có thể chọn lại cùng một tệp
+                updateMainImagePreview(null);
+            });
+
+            /**
+             * Xử lý tải lên các ảnh phụ và hiển thị ảnh xem trước.
+             */
+            $secondaryImageUploadInput.on('change', function(event) {
+                const files = Array.from(event.target.files); // Chuyển FileList sang Array để dễ thao tác
+                if (files.length > 0) {
+                    files.forEach(file => {
+                        uploadedFiles.secondary.push(file); // Lưu trữ File object thực tế
+                        const reader = new FileReader();
+                        reader.onload = (function(f) {
+                            return function(e) {
+                                renderSecondaryImagePreview(e.target.result, uploadedFiles.secondary.indexOf(f));
+                            };
+                        })(file);
+                        reader.readAsDataURL(file);
+                    });
+                    $(this).val(''); // Xóa giá trị input để có thể chọn lại cùng một tệp
+                }
+            });
+
+            /**
+             * Render một ảnh phụ và thêm vào danh sách.
+             * {string} imageUrl - URL Base64 của ảnh.
+             * {number} index - Chỉ số của ảnh trong mảng uploadedFiles.secondary.
+             */
+            function renderSecondaryImagePreview(imageUrl, index) {
+                const $colDiv = $('<div class="col"></div>');
+                const $imageItemDiv = $('<div class="secondary-image-item h-full"></div>');
+
+                const $img = $('<img>').attr({
+                    src: imageUrl,
+                    alt: `Ảnh phụ ${index + 1}`
+                });
+                $imageItemDiv.append($img);
+
+                const $deleteBtn = $('<button type="button" class="delete-image-btn">&times;</button>');
+                $deleteBtn.on('click', function() {
+                    removeSecondaryImage(index);
+                });
+                $imageItemDiv.append($deleteBtn);
+
+                $colDiv.append($imageItemDiv);
+                $secondaryImagesList.append($colDiv);
+                updateSecondaryImagesListMessage();
+            }
+
+            /**
+             * Xóa ảnh phụ đã chọn.
+             * {number} index - Chỉ số của ảnh trong mảng uploadedFiles.secondary.
+             */
+            function removeSecondaryImage(index) {
+                uploadedFiles.secondary.splice(index, 1); // Xóa File object tại chỉ số đã cho
+                renderAllSecondaryImages(); // Render lại toàn bộ danh sách để đảm bảo chỉ số đúng
+            }
+
+            /**
+             * Render lại toàn bộ danh sách các ảnh phụ dựa trên uploadedFiles.secondary.
+             */
+            function renderAllSecondaryImages() {
+                $secondaryImagesList.empty(); // Xóa tất cả ảnh hiện có
+
+                if (uploadedFiles.secondary.length === 0) {
+                    $secondaryImagesList.append('<div class="col-span-full text-center text-gray-400">Chưa có ảnh phụ nào được chọn.</div>');
+                    return;
+                }
+
+                uploadedFiles.secondary.forEach((file, index) => {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        renderSecondaryImagePreview(e.target.result, index);
+                    };
+                    reader.readAsDataURL(file);
+                });
+            }
+
+            /**
+             * Cập nhật thông báo nếu không có ảnh phụ nào.
+             */
+            function updateSecondaryImagesListMessage() {
+                if (uploadedFiles.secondary.length === 0 && $secondaryImagesList.find('.col-span-full').length === 0) {
+                    $secondaryImagesList.append('<div class="col-span-full text-center text-gray-400">Chưa có ảnh phụ nào được chọn.</div>');
+                } else if (uploadedFiles.secondary.length > 0) {
+                    $secondaryImagesList.find('.col-span-full').remove();
+                }
+            }
+
+            // Kích hoạt hiển thị ban đầu
+            updateMainImagePreview(null); // Bắt đầu không có ảnh
+            renderAllSecondaryImages(); // Bắt đầu không có ảnh phụ
+
+            // --- Xử lý gửi form (Ví dụ sử dụng AJAX) ---
+            // Giả sử bạn có một nút submit hoặc một sự kiện gửi form
+            $('#yourSubmitButtonId').on('click', function(e) {
+                e.preventDefault(); // Ngăn chặn submit form truyền thống
+
+                const formData = new FormData();
+
+                // Thêm ảnh chính (nếu có)
+                if (uploadedFiles.main) {
+                    formData.append('ImageFiles', uploadedFiles.main, uploadedFiles.main.name);
+                }
+
+                // Thêm các ảnh phụ (nếu có)
+                uploadedFiles.secondary.forEach((file) => {
+                    formData.append('ImageFiles', file, file.name); // Tên 'ImageFiles' phải khớp với tên thuộc tính trong ViewModel của bạn
+                });
+
+                // Thêm các dữ liệu form khác nếu có
+                // formData.append('ProductName', $('#productNameInput').val());
+                // formData.append('Description', $('#descriptionTextarea').val());
+
+                $.ajax({
+                    url: '/YourController/CreateProduct', // Thay thế bằng URL của action ASP.NET Core của bạn
+                    type: 'POST',
+                    data: formData,
+                    processData: false, // Quan trọng: Không xử lý dữ liệu
+                    contentType: false, // Quan trọng: Không đặt Content-Type
+                    success: function(response) {
+                        console.log('Upload thành công!', response);
+                        // Xử lý phản hồi từ server
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Upload thất bại!', error);
+                        // Xử lý lỗi
+                    }
+                });
+            });
+        });
+    </script>
 }

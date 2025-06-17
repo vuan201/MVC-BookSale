@@ -444,3 +444,169 @@ a.redirect-button:hover {
   background-color: #2A3038;
   opacity: 1;
 }
+
+/* CSS phần lưu ảnh của sách */
+.container-fluid {
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+.form-section, .image-section {
+    background-color: #2a2a4a; /* Màu nền của các phần form và image */
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.form-label {
+    color: #cccccc;
+}
+
+.form-control, .form-select {
+    background-color: #3a3a5a;
+    border: 1px solid #5a5a7a;
+    color: #ffffff;
+    border-radius: 8px;
+    padding: 10px 15px;
+}
+
+    .form-control::placeholder {
+        color: #aaaaaa;
+    }
+
+    .form-control:focus, .form-select:focus {
+        background-color: #4a4a6a;
+        border-color: #7a7a9a;
+        box-shadow: none;
+    }
+
+.btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-weight: bold;
+}
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+        border-color: #0056b3;
+    }
+
+.main-image-area {
+    border: 2px dashed #5a5a7a;
+    background-color: #3a3a5a;
+    min-height: 256px; /* Kích thước lớn hơn cho ảnh chính */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+    .main-image-area:hover {
+        background-color: #4a4a6a;
+    }
+
+    .main-image-area img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain; /* Thay đổi từ cover sang contain để ảnh không bị cắt */
+        border-radius: 8px;
+        display: block; /* Đảm bảo hình ảnh hiển thị */
+    }
+
+    .main-image-area input[type="file"] {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        cursor: pointer;
+        z-index: 5;
+    }
+
+.main-image-placeholder {
+    text-align: center;
+    color: #aaaaaa;
+}
+
+    .main-image-placeholder i {
+        font-size: 4rem; /* Kích thước dấu + */
+        color: #cccccc;
+    }
+
+.delete-image-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: rgba(255, 0, 0, 0.7);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 16px;
+    cursor: pointer;
+    z-index: 10;
+}
+
+.secondary-image-item {
+    position: relative;
+    border: 1px solid #5a5a7a;
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: #3a3a5a;
+}
+
+    .secondary-image-item img {
+        width: 100%;
+        height: 100px; /* Chiều cao cố định cho ảnh phụ */
+        object-fit: cover;
+        border-radius: 8px 8px 0 0;
+        display: block;
+    }
+
+    .secondary-image-item .delete-image-btn {
+        top: 5px;
+        right: 5px;
+        width: 25px;
+        height: 25px;
+        font-size: 14px;
+    }
+
+.secondary-image-placeholder {
+    background-color: #5a5a7a;
+    color: #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100px;
+    border-radius: 8px 8px 0 0;
+    text-align: center;
+}
+
+.add-secondary-image-button {
+    display: block;
+    width: 100%;
+    padding: 10px 15px;
+    background-color: #4a4a6a;
+    color: #ffffff;
+    border: 1px dashed #7a7a9a;
+    border-radius: 8px;
+    cursor: pointer;
+    text-align: center;
+    transition: background-color 0.3s ease;
+}
+
+    .add-secondary-image-button:hover {
+        background-color: #5a5a7a;
+    }
+/* Hidden input for secondary images */
+#secondaryImageUploadInput {
+    display: none; /* Ẩn input file thực */
+}
