@@ -1,9 +1,10 @@
-﻿@model BookSale.Managerment.Application.DTOs.BookDetailDTO
+﻿@using BookSale.Managerment.Ui.Areas.Admin.Controllers
+@model BookSale.Managerment.Application.DTOs.BookDetailDTO
 
 @{
     ViewData["Title"] = "Save";
 }
-<form class="forms-sample" asp-action="Save">
+<form id="form-save-book" class="forms-sample" asp-action="Save">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <div class="row">
         <div class="col-md-6 grid-margin stretch-card">
@@ -282,10 +283,11 @@
 
             // --- Xử lý gửi form (Ví dụ sử dụng AJAX) ---
             // Giả sử bạn có một nút submit hoặc một sự kiện gửi form
-            $('#yourSubmitButtonId').on('click', function(e) {
+            $('#form-save-book').on('submit', function(e) {
                 e.preventDefault(); // Ngăn chặn submit form truyền thống
 
-                const formData = new FormData();
+                // const formData = $(this).serialize();
+                const formData = new FormData(this);;
 
                 // Thêm ảnh chính (nếu có)
                 if (uploadedFiles.main) {
@@ -300,9 +302,8 @@
                 // Thêm các dữ liệu form khác nếu có
                 // formData.append('ProductName', $('#productNameInput').val());
                 // formData.append('Description', $('#descriptionTextarea').val());
-
                 $.ajax({
-                    url: '/YourController/CreateProduct', // Thay thế bằng URL của action ASP.NET Core của bạn
+                    url: '@Url.Action(nameof(BookController.Save))', // Thay thế bằng URL của action ASP.NET Core của bạn
                     type: 'POST',
                     data: formData,
                     processData: false, // Quan trọng: Không xử lý dữ liệu
