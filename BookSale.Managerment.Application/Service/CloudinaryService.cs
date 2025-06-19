@@ -133,5 +133,24 @@ namespace BookSale.Managerment.Application.Service
             }
             return files;
         }
+        public async Task<ResponseModel<string>> RemoveImage(string publicId)
+        {
+            if (string.IsNullOrEmpty(publicId))
+            {
+                return new ResponseModel<string>(false, "PublicId không hợp lệ!");
+            }
+
+            var deletionParams = new DeletionParams(publicId);
+
+            var deletionResult = await _cloudinary.DestroyAsync(deletionParams);
+
+            if (deletionResult.Result == "ok" || deletionResult.Result == "deleted")
+            {
+                return new ResponseModel<string>(true, "Xoá ảnh thành công!", publicId);
+            }
+
+            return new ResponseModel<string>(false, $"Xoá ảnh thất bại: {deletionResult.Error?.Message ?? "Không rõ lỗi."}");
+
+        }
     }
 }

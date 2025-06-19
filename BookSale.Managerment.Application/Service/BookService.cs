@@ -164,21 +164,25 @@ namespace BookSale.Managerment.Application.Service
                 // Nếu không có tags mới thì không làm gì
                 if (bookDetail.BookTagIds?.Any() == true)
                 {
-                    // Xóa các tags cũ
-                    var oldBookTags = existingBook.BookTags.ToList();
-                    foreach (var oldTag in oldBookTags)
-                    {
-                        existingBook.BookTags.Remove(oldTag);
-                    }
+                    // Xóa các tags đã bị loại bỏ
+                    var newTagIds = new HashSet<int>(bookDetail.BookTagIds);
+                    var existingTagIds = existingBook.BookTags.Select(bt => bt.TagId).ToList();
+
+                    // Xóa các tags đã bị loại bỏ
+                    existingBook.BookTags.ToList().RemoveAll(bt => !newTagIds.Contains(bt.TagId));
 
                     // Thêm tags mới
-                    foreach (var i in bookDetail.BookTagIds)
+                    foreach (var tagId in bookDetail.BookTagIds)
                     {
-                        existingBook.BookTags.Add(new BookTags { BookId = existingBook.Id, TagId = i });
+                        if(!existingBook.BookTags.Any(i => i.Tags.Id == tagId))
+                        {
+                            existingBook.BookTags.Add(new BookTags { BookId = existingBook.Id, TagId = tagId });
+                        }
                     }
                 }
 
                 await _unitOfWork.SaveChangesAsync();
+
                 // Map dữ liệu từ entity trở lại DTO để trả về
                 var updatedBookDTO = _mapper.Map<BookDetailDTO>(existingBook);
 
@@ -192,7 +196,7 @@ namespace BookSale.Managerment.Application.Service
         }
 
         // Phương thức riêng để xử lý hình ảnh của sách
-        private async Task ProcessBookImages(BookDetailDTO bookDetail, Books newBook)
+        private async Task ProcessBookImages(BookDetailDTO   bookDetail, Books newBook)
         {
             if (bookDetail.ImageFiles?.Any() != true)
                 return;
@@ -232,13 +236,22 @@ namespace BookSale.Managerment.Application.Service
             if (bookDetail.ImageFiles?.Any() != true)
                 return;
 
-            // Xóa các ảnh cũ
+            // Xóa các ảnh đã bị loại bỏ
             var oldBookImages = existingBook.BookImages.ToList();
+            // lặp qua danh sách ảnh cũ
             foreach (var oldImage in oldBookImages)
             {
-                existingBook.BookImages.Remove(oldImage);
-            }
+                // nếu như không tìm thấy file ảnh cũ trong danh sách ảnh mới tức là đã được xóa ở phía FE
+                if (bookDetail.BookImages?.Any(i => i.Id == oldImage.ImageId) == false)
+                {
+                    // thực hiện xóa trên cloud
+                    var removeResult = await _cloudinaryService.RemoveImage(oldImage.Images.Key);
 
+                    // thực hiện xóa trên db
+                    if(removeResult.Status == true)
+                        existingBook.BookImages.Remove(oldImage);
+                }
+            }
             // Upload ảnh mới lên storage
             var uploadResult = await _cloudinaryService.UploadListImage(bookDetail.ImageFiles.ToList());
 

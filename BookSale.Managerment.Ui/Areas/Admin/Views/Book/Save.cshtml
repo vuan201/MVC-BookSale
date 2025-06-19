@@ -12,6 +12,13 @@
                 <div class="card-body">
                     <h4 class="card-title">Tạo sách mới</h4>
                     <input type="hidden" asp-for="Id" class="form-control" />
+                    @if(Model.Id != 0 )
+                    {
+                        <div class="form-group">
+                            <label asp-for="Id" class="control-label"></label>
+                            <input asp-for="Id" class="form-control" disabled />
+                        </div>
+                    }
                     <div class="form-group">
                         <label asp-for="Code" class="control-label"></label>
                         <input asp-for="Code" class="form-control" readonly />
@@ -43,7 +50,14 @@
                             <option>--Chọn thể loại--</option>
                             @foreach (var item in ViewBag.Genres)
                             {
-                                <option value="@item.Id">@item.Name</option>
+                                @if(item.Id == Model.GenreId)
+                                {
+                                    <option selected value="@item.Id">@item.Name</option>
+                                }else
+                                {
+                                    <option value="@item.Id">@item.Name</option>
+                                }
+
                             }
                         </select>
                         <span asp-validation-for="GenreId" class="text-danger"></span>
@@ -54,7 +68,13 @@
                             <option>--Chọn tác giả--</option>
                             @foreach (var item in ViewBag.Authors)
                             {
-                                <option value="@item.Id">@item.FullName</option>
+                                if(item.Id == Model.AuthorId)
+                                {
+                                    <option selected value="@item.Id">@item.FullName</option>
+                                }else
+                                {
+                                    <option value="@item.Id">@item.FullName</option>
+                                }
                             }
                         </select>
                         <span asp-validation-for="AuthorId" class="text-danger"></span>
@@ -64,7 +84,14 @@
                         <select class="form-control" asp-for="BookTagIds">
                             @foreach (var item in ViewBag.Tags)
                             {
-                                <option value="@item.Id">@item.Name</option>
+                                if(Model.BookTagIds is not null && Model.BookTagIds.Contains(item.Id))
+                                {
+                                    <option selected value="@item.Id">@item.Name</option>
+                                } else
+                                {
+                                    <option value="@item.Id">@item.Name</option>
+                                }
+
                             }
                         </select>
                     </div>
